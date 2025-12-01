@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "description": "Schema for event data storage",
+  "event": {
+    "id": "string (UUID)",
+    "name": "string",
+    "description": "string",
+    "creator": "string (Ethereum address)",
+    "createdAt": "string (ISO 8601 timestamp)",
+    "eventDate": "string (ISO 8601 timestamp)",
+    "location": "string",
+    "ticketPrice": "string (in ETH)",
+    "totalTickets": "number",
+    "ticketsSold": "number",
+    "status": "string (active|completed|cancelled)",
+    "contractAddress": "string (Ethereum address)"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "description": "Schema for user data storage",
+  "user": {
+    "address": "string (Ethereum address)",
+    "username": "string",
+    "email": "string",
+    "joinedAt": "string (ISO 8601 timestamp)",
+    "eventsCreated": "array of string (event IDs)",
+    "ticketsOwned": "array of string (ticket IDs)",
+    "totalSpent": "string (in ETH)",
+    "reputation": "number",
+    "verified": "boolean"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "description": "Schema for transaction data storage",
+  "transaction": {
+    "id": "string (UUID)",
+    "type": "string (ticket_purchase|token_trade|event_creation)",
+    "from": "string (Ethereum address)",
+    "to": "string (Ethereum address)",
+    "amount": "string (in ETH or tokens)",
+    "currency": "string (ETH|TOKEN)",
+    "eventId": "string (event ID, optional)",
+    "ticketId": "string (ticket ID, optional)",
+    "status": "string (pending|completed|failed)",
+    "txHash": "string (Ethereum transaction hash)",
+    "timestamp": "string (ISO 8601 timestamp)",
+    "gasUsed": "string (in Wei)",
+    "blockNumber": "number"
+  }
+}
