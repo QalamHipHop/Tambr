@@ -2,12 +2,12 @@
 
 ## 📋 Overview
 
-**Tambr** is a comprehensive, production-ready token launchpad and trading platform built on EVM-compatible blockchains. It combines the best features of **PumpFun** with advanced Iranian-focused features including KYC/AML compliance, Social Recovery Wallets, and Rial-backed stablecoins.
+**Tambr** is a comprehensive, production-ready token launchpad and trading platform built on EVM-compatible blockchains. It combines the best features of **Dynamic Bonding Curve (DBC) platforms** with advanced Iranian-focused features including KYC/AML compliance, Social Recovery Wallets, and Rial-backed stablecoins.
 
 ### Key Features
 
 - **🚀 Instant Token Launch**: Create and deploy tokens in seconds with no coding required
-- **📈 Dynamic Bonding Curve**: PumpFun-inspired x*y=k pricing model with virtual reserves
+- **📈 Dynamic Bonding Curve**: Tambr-optimized x*y=k pricing model with virtual reserves
 - **🔄 Automated Liquidity Migration**: Seamless transition from bonding curve to DEX when threshold is reached
 - **🛡️ KYC/AML Compliance**: Iranian-focused identity verification (Level 1+)
 - **👥 Social Recovery Wallet**: Secure wallet recovery using trusted guardians
@@ -54,7 +54,7 @@ Tambr/
 - Pausable for emergency situations
 
 ### 2. DynamicBondingCurve.sol
-- **PumpFun-like bonding curve** using x*y=k formula
+- **Dynamic Bonding Curve (DBC)** using x*y=k formula
 - Virtual reserves for price discovery
 - Automated Liquidity Provision (ALP) to AMM at threshold
 - **Founder's share**: 0.1% of 0.8% transaction fee
@@ -311,7 +311,7 @@ pnpm test
 
 - **ARCHITECTURE_PLAN.md**: Technical architecture and design
 - **EXPANSION_PLAN.md**: Future expansion roadmap
-- **PUMPFUN_EXPANSION_PLAN.md**: PumpFun feature integration details
+- **PUMPFUN_EXPANSION_PLAN.md**: Dynamic Bonding Curve feature integration details
 
 ## 🤝 Contributing
 
