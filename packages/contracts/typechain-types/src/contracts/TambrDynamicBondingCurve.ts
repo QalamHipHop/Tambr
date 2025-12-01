@@ -26,147 +26,58 @@ import type {
 export interface TambrDynamicBondingCurveInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "BASIS_POINTS"
-      | "FEE_PERCENTAGE"
-      | "FOUNDER_FEE_PERCENTAGE"
-      | "allowance"
-      | "ammAddress"
-      | "approve"
-      | "balanceOf"
-      | "baseToken"
+      | "FEE_DENOMINATOR"
       | "buy"
-      | "calculateBaseAmountForTokenAmount"
-      | "calculateTokenAmountForBaseAmount"
-      | "createdAt"
-      | "decimals"
-      | "dynamicFactor"
-      | "founderAddress"
-      | "getBondingCurveProgress"
-      | "getCurrentPrice"
-      | "getMarketCap"
-      | "isMigrated"
-      | "migrationThreshold"
-      | "name"
-      | "oracleAddress"
+      | "calculateBuyReturn"
+      | "calculateSellReturn"
+      | "founderFeeRate"
       | "owner"
-      | "realBaseReserve"
-      | "realTokenReserve"
       | "renounceOwnership"
+      | "reserveBalance"
       | "sell"
-      | "setDynamicFactor"
-      | "symbol"
-      | "tokenCreator"
-      | "tokenDescription"
-      | "tokenImageUrl"
-      | "tokenSymbol"
-      | "totalSupply"
-      | "transfer"
-      | "transferFrom"
+      | "setFounderFeeRate"
+      | "setTreasury"
+      | "stablecoin"
       | "transferOwnership"
-      | "triggerMigrationManual"
-      | "virtualBaseReserve"
-      | "virtualTokenReserve"
-      | "withdrawAfterMigration"
+      | "treasury"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
-      | "Approval"
       | "Buy"
-      | "MigratedToAMM"
+      | "FounderFeeRateUpdated"
       | "OwnershipTransferred"
       | "Sell"
-      | "TokenCreated"
-      | "Transfer"
+      | "TreasuryUpdated"
   ): EventFragment;
 
   encodeFunctionData(
-    functionFragment: "BASIS_POINTS",
+    functionFragment: "FEE_DENOMINATOR",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "FEE_PERCENTAGE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "FOUNDER_FEE_PERCENTAGE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [AddressLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "ammAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(functionFragment: "baseToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "buy",
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateBaseAmountForTokenAmount",
+    functionFragment: "calculateBuyReturn",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateTokenAmountForBaseAmount",
+    functionFragment: "calculateSellReturn",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "createdAt", values?: undefined): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "dynamicFactor",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "founderAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getBondingCurveProgress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCurrentPrice",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getMarketCap",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isMigrated",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "migrationThreshold",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "oracleAddress",
+    functionFragment: "founderFeeRate",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "realBaseReserve",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "realTokenReserve",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reserveBalance",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -174,221 +85,83 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setDynamicFactor",
+    functionFragment: "setFounderFeeRate",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "tokenCreator",
+    functionFragment: "setTreasury",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "stablecoin",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenDescription",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenImageUrl",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenSymbol",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
-  encodeFunctionData(
-    functionFragment: "triggerMigrationManual",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "virtualBaseReserve",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "virtualTokenReserve",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawAfterMigration",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
 
   decodeFunctionResult(
-    functionFragment: "BASIS_POINTS",
+    functionFragment: "FEE_DENOMINATOR",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "FEE_PERCENTAGE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "FOUNDER_FEE_PERCENTAGE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ammAddress", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "baseToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buy", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "calculateBaseAmountForTokenAmount",
+    functionFragment: "calculateBuyReturn",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateTokenAmountForBaseAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "createdAt", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "dynamicFactor",
+    functionFragment: "calculateSellReturn",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "founderAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getBondingCurveProgress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCurrentPrice",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getMarketCap",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "isMigrated", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "migrationThreshold",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "oracleAddress",
+    functionFragment: "founderFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "realBaseReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "realTokenReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reserveBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sell", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setDynamicFactor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenCreator",
+    functionFragment: "setFounderFeeRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "tokenDescription",
+    functionFragment: "setTreasury",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenImageUrl",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenSymbol",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "stablecoin", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "triggerMigrationManual",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "virtualBaseReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "virtualTokenReserve",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawAfterMigration",
-    data: BytesLike
-  ): Result;
-}
-
-export namespace ApprovalEvent {
-  export type InputTuple = [
-    owner: AddressLike,
-    spender: AddressLike,
-    value: BigNumberish
-  ];
-  export type OutputTuple = [owner: string, spender: string, value: bigint];
-  export interface OutputObject {
-    owner: string;
-    spender: string;
-    value: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+  decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
 }
 
 export namespace BuyEvent {
   export type InputTuple = [
     buyer: AddressLike,
-    baseTokenAmount: BigNumberish,
-    tokenAmount: BigNumberish,
-    newPrice: BigNumberish,
+    amountIn: BigNumberish,
+    tokensOut: BigNumberish,
     founderFee: BigNumberish
   ];
   export type OutputTuple = [
     buyer: string,
-    baseTokenAmount: bigint,
-    tokenAmount: bigint,
-    newPrice: bigint,
+    amountIn: bigint,
+    tokensOut: bigint,
     founderFee: bigint
   ];
   export interface OutputObject {
     buyer: string;
-    baseTokenAmount: bigint;
-    tokenAmount: bigint;
-    newPrice: bigint;
+    amountIn: bigint;
+    tokensOut: bigint;
     founderFee: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -397,24 +170,11 @@ export namespace BuyEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace MigratedToAMMEvent {
-  export type InputTuple = [
-    ammAddress: AddressLike,
-    baseTokenAmount: BigNumberish,
-    tokenAmount: BigNumberish,
-    timestamp: BigNumberish
-  ];
-  export type OutputTuple = [
-    ammAddress: string,
-    baseTokenAmount: bigint,
-    tokenAmount: bigint,
-    timestamp: bigint
-  ];
+export namespace FounderFeeRateUpdatedEvent {
+  export type InputTuple = [newRate: BigNumberish];
+  export type OutputTuple = [newRate: bigint];
   export interface OutputObject {
-    ammAddress: string;
-    baseTokenAmount: bigint;
-    tokenAmount: bigint;
-    timestamp: bigint;
+    newRate: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -438,23 +198,20 @@ export namespace OwnershipTransferredEvent {
 export namespace SellEvent {
   export type InputTuple = [
     seller: AddressLike,
-    tokenAmount: BigNumberish,
-    baseTokenAmount: BigNumberish,
-    newPrice: BigNumberish,
+    tokensIn: BigNumberish,
+    amountOut: BigNumberish,
     founderFee: BigNumberish
   ];
   export type OutputTuple = [
     seller: string,
-    tokenAmount: bigint,
-    baseTokenAmount: bigint,
-    newPrice: bigint,
+    tokensIn: bigint,
+    amountOut: bigint,
     founderFee: bigint
   ];
   export interface OutputObject {
     seller: string;
-    tokenAmount: bigint;
-    baseTokenAmount: bigint;
-    newPrice: bigint;
+    tokensIn: bigint;
+    amountOut: bigint;
     founderFee: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -463,45 +220,11 @@ export namespace SellEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace TokenCreatedEvent {
-  export type InputTuple = [
-    creator: AddressLike,
-    name: string,
-    symbol: string,
-    initialVirtualBaseReserve: BigNumberish,
-    initialVirtualTokenReserve: BigNumberish
-  ];
-  export type OutputTuple = [
-    creator: string,
-    name: string,
-    symbol: string,
-    initialVirtualBaseReserve: bigint,
-    initialVirtualTokenReserve: bigint
-  ];
+export namespace TreasuryUpdatedEvent {
+  export type InputTuple = [newTreasury: AddressLike];
+  export type OutputTuple = [newTreasury: string];
   export interface OutputObject {
-    creator: string;
-    name: string;
-    symbol: string;
-    initialVirtualBaseReserve: bigint;
-    initialVirtualTokenReserve: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace TransferEvent {
-  export type InputTuple = [
-    from: AddressLike,
-    to: AddressLike,
-    value: BigNumberish
-  ];
-  export type OutputTuple = [from: string, to: string, value: bigint];
-  export interface OutputObject {
-    from: string;
-    to: string;
-    value: bigint;
+    newTreasury: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -552,113 +275,53 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  BASIS_POINTS: TypedContractMethod<[], [bigint], "view">;
-
-  FEE_PERCENTAGE: TypedContractMethod<[], [bigint], "view">;
-
-  FOUNDER_FEE_PERCENTAGE: TypedContractMethod<[], [bigint], "view">;
-
-  allowance: TypedContractMethod<
-    [owner: AddressLike, spender: AddressLike],
-    [bigint],
-    "view"
-  >;
-
-  ammAddress: TypedContractMethod<[], [string], "view">;
-
-  approve: TypedContractMethod<
-    [spender: AddressLike, value: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
-
-  balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
-
-  baseToken: TypedContractMethod<[], [string], "view">;
+  FEE_DENOMINATOR: TypedContractMethod<[], [bigint], "view">;
 
   buy: TypedContractMethod<
-    [baseTokenAmount: BigNumberish, minTokenAmount: BigNumberish],
-    [bigint],
-    "nonpayable"
-  >;
-
-  calculateBaseAmountForTokenAmount: TypedContractMethod<
-    [tokenAmount: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
-  calculateTokenAmountForBaseAmount: TypedContractMethod<
-    [baseTokenAmount: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
-  createdAt: TypedContractMethod<[], [bigint], "view">;
-
-  decimals: TypedContractMethod<[], [bigint], "view">;
-
-  dynamicFactor: TypedContractMethod<[], [bigint], "view">;
-
-  founderAddress: TypedContractMethod<[], [string], "view">;
-
-  getBondingCurveProgress: TypedContractMethod<[], [bigint], "view">;
-
-  getCurrentPrice: TypedContractMethod<[], [bigint], "view">;
-
-  getMarketCap: TypedContractMethod<[], [bigint], "view">;
-
-  isMigrated: TypedContractMethod<[], [boolean], "view">;
-
-  migrationThreshold: TypedContractMethod<[], [bigint], "view">;
-
-  name: TypedContractMethod<[], [string], "view">;
-
-  oracleAddress: TypedContractMethod<[], [string], "view">;
-
-  owner: TypedContractMethod<[], [string], "view">;
-
-  realBaseReserve: TypedContractMethod<[], [bigint], "view">;
-
-  realTokenReserve: TypedContractMethod<[], [bigint], "view">;
-
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
-
-  sell: TypedContractMethod<
-    [tokenAmount: BigNumberish, minBaseAmount: BigNumberish],
-    [bigint],
-    "nonpayable"
-  >;
-
-  setDynamicFactor: TypedContractMethod<
-    [_dynamicFactor: BigNumberish],
+    [_amountIn: BigNumberish, _minTokensOut: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  symbol: TypedContractMethod<[], [string], "view">;
+  calculateBuyReturn: TypedContractMethod<
+    [_amountIn: BigNumberish],
+    [[bigint, bigint] & { tokensOut: bigint; feeAmount: bigint }],
+    "view"
+  >;
 
-  tokenCreator: TypedContractMethod<[], [string], "view">;
+  calculateSellReturn: TypedContractMethod<
+    [_tokensIn: BigNumberish],
+    [[bigint, bigint] & { amountOut: bigint; feeAmount: bigint }],
+    "view"
+  >;
 
-  tokenDescription: TypedContractMethod<[], [string], "view">;
+  founderFeeRate: TypedContractMethod<[], [bigint], "view">;
 
-  tokenImageUrl: TypedContractMethod<[], [string], "view">;
+  owner: TypedContractMethod<[], [string], "view">;
 
-  tokenSymbol: TypedContractMethod<[], [string], "view">;
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
-  totalSupply: TypedContractMethod<[], [bigint], "view">;
+  reserveBalance: TypedContractMethod<[], [bigint], "view">;
 
-  transfer: TypedContractMethod<
-    [to: AddressLike, value: BigNumberish],
-    [boolean],
+  sell: TypedContractMethod<
+    [_tokensIn: BigNumberish, _minAmountOut: BigNumberish],
+    [void],
     "nonpayable"
   >;
 
-  transferFrom: TypedContractMethod<
-    [from: AddressLike, to: AddressLike, value: BigNumberish],
-    [boolean],
+  setFounderFeeRate: TypedContractMethod<
+    [_newRate: BigNumberish],
+    [void],
     "nonpayable"
   >;
+
+  setTreasury: TypedContractMethod<
+    [_newTreasury: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  stablecoin: TypedContractMethod<[], [string], "view">;
 
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
@@ -666,177 +329,71 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     "nonpayable"
   >;
 
-  triggerMigrationManual: TypedContractMethod<
-    [_ammAddress: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-
-  virtualBaseReserve: TypedContractMethod<[], [bigint], "view">;
-
-  virtualTokenReserve: TypedContractMethod<[], [bigint], "view">;
-
-  withdrawAfterMigration: TypedContractMethod<[], [void], "nonpayable">;
+  treasury: TypedContractMethod<[], [string], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
   getFunction(
-    nameOrSignature: "BASIS_POINTS"
+    nameOrSignature: "FEE_DENOMINATOR"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "FEE_PERCENTAGE"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "FOUNDER_FEE_PERCENTAGE"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "allowance"
-  ): TypedContractMethod<
-    [owner: AddressLike, spender: AddressLike],
-    [bigint],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "ammAddress"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "approve"
-  ): TypedContractMethod<
-    [spender: AddressLike, value: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "balanceOf"
-  ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "baseToken"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "buy"
   ): TypedContractMethod<
-    [baseTokenAmount: BigNumberish, minTokenAmount: BigNumberish],
-    [bigint],
+    [_amountIn: BigNumberish, _minTokensOut: BigNumberish],
+    [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "calculateBaseAmountForTokenAmount"
-  ): TypedContractMethod<[tokenAmount: BigNumberish], [bigint], "view">;
+    nameOrSignature: "calculateBuyReturn"
+  ): TypedContractMethod<
+    [_amountIn: BigNumberish],
+    [[bigint, bigint] & { tokensOut: bigint; feeAmount: bigint }],
+    "view"
+  >;
   getFunction(
-    nameOrSignature: "calculateTokenAmountForBaseAmount"
-  ): TypedContractMethod<[baseTokenAmount: BigNumberish], [bigint], "view">;
+    nameOrSignature: "calculateSellReturn"
+  ): TypedContractMethod<
+    [_tokensIn: BigNumberish],
+    [[bigint, bigint] & { amountOut: bigint; feeAmount: bigint }],
+    "view"
+  >;
   getFunction(
-    nameOrSignature: "createdAt"
+    nameOrSignature: "founderFeeRate"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "decimals"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "dynamicFactor"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "founderAddress"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "getBondingCurveProgress"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getCurrentPrice"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getMarketCap"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "isMigrated"
-  ): TypedContractMethod<[], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "migrationThreshold"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "name"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "oracleAddress"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "realBaseReserve"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "realTokenReserve"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "sell"
-  ): TypedContractMethod<
-    [tokenAmount: BigNumberish, minBaseAmount: BigNumberish],
-    [bigint],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "setDynamicFactor"
-  ): TypedContractMethod<[_dynamicFactor: BigNumberish], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "symbol"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "tokenCreator"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "tokenDescription"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "tokenImageUrl"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "tokenSymbol"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "totalSupply"
+    nameOrSignature: "reserveBalance"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "transfer"
+    nameOrSignature: "sell"
   ): TypedContractMethod<
-    [to: AddressLike, value: BigNumberish],
-    [boolean],
+    [_tokensIn: BigNumberish, _minAmountOut: BigNumberish],
+    [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "transferFrom"
-  ): TypedContractMethod<
-    [from: AddressLike, to: AddressLike, value: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
+    nameOrSignature: "setFounderFeeRate"
+  ): TypedContractMethod<[_newRate: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setTreasury"
+  ): TypedContractMethod<[_newTreasury: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "stablecoin"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "triggerMigrationManual"
-  ): TypedContractMethod<[_ammAddress: AddressLike], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "virtualBaseReserve"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "virtualTokenReserve"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "withdrawAfterMigration"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+    nameOrSignature: "treasury"
+  ): TypedContractMethod<[], [string], "view">;
 
-  getEvent(
-    key: "Approval"
-  ): TypedContractEvent<
-    ApprovalEvent.InputTuple,
-    ApprovalEvent.OutputTuple,
-    ApprovalEvent.OutputObject
-  >;
   getEvent(
     key: "Buy"
   ): TypedContractEvent<
@@ -845,11 +402,11 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     BuyEvent.OutputObject
   >;
   getEvent(
-    key: "MigratedToAMM"
+    key: "FounderFeeRateUpdated"
   ): TypedContractEvent<
-    MigratedToAMMEvent.InputTuple,
-    MigratedToAMMEvent.OutputTuple,
-    MigratedToAMMEvent.OutputObject
+    FounderFeeRateUpdatedEvent.InputTuple,
+    FounderFeeRateUpdatedEvent.OutputTuple,
+    FounderFeeRateUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "OwnershipTransferred"
@@ -866,33 +423,15 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     SellEvent.OutputObject
   >;
   getEvent(
-    key: "TokenCreated"
+    key: "TreasuryUpdated"
   ): TypedContractEvent<
-    TokenCreatedEvent.InputTuple,
-    TokenCreatedEvent.OutputTuple,
-    TokenCreatedEvent.OutputObject
-  >;
-  getEvent(
-    key: "Transfer"
-  ): TypedContractEvent<
-    TransferEvent.InputTuple,
-    TransferEvent.OutputTuple,
-    TransferEvent.OutputObject
+    TreasuryUpdatedEvent.InputTuple,
+    TreasuryUpdatedEvent.OutputTuple,
+    TreasuryUpdatedEvent.OutputObject
   >;
 
   filters: {
-    "Approval(address,address,uint256)": TypedContractEvent<
-      ApprovalEvent.InputTuple,
-      ApprovalEvent.OutputTuple,
-      ApprovalEvent.OutputObject
-    >;
-    Approval: TypedContractEvent<
-      ApprovalEvent.InputTuple,
-      ApprovalEvent.OutputTuple,
-      ApprovalEvent.OutputObject
-    >;
-
-    "Buy(address,uint256,uint256,uint256,uint256)": TypedContractEvent<
+    "Buy(address,uint256,uint256,uint256)": TypedContractEvent<
       BuyEvent.InputTuple,
       BuyEvent.OutputTuple,
       BuyEvent.OutputObject
@@ -903,15 +442,15 @@ export interface TambrDynamicBondingCurve extends BaseContract {
       BuyEvent.OutputObject
     >;
 
-    "MigratedToAMM(address,uint256,uint256,uint256)": TypedContractEvent<
-      MigratedToAMMEvent.InputTuple,
-      MigratedToAMMEvent.OutputTuple,
-      MigratedToAMMEvent.OutputObject
+    "FounderFeeRateUpdated(uint256)": TypedContractEvent<
+      FounderFeeRateUpdatedEvent.InputTuple,
+      FounderFeeRateUpdatedEvent.OutputTuple,
+      FounderFeeRateUpdatedEvent.OutputObject
     >;
-    MigratedToAMM: TypedContractEvent<
-      MigratedToAMMEvent.InputTuple,
-      MigratedToAMMEvent.OutputTuple,
-      MigratedToAMMEvent.OutputObject
+    FounderFeeRateUpdated: TypedContractEvent<
+      FounderFeeRateUpdatedEvent.InputTuple,
+      FounderFeeRateUpdatedEvent.OutputTuple,
+      FounderFeeRateUpdatedEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<
@@ -925,7 +464,7 @@ export interface TambrDynamicBondingCurve extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "Sell(address,uint256,uint256,uint256,uint256)": TypedContractEvent<
+    "Sell(address,uint256,uint256,uint256)": TypedContractEvent<
       SellEvent.InputTuple,
       SellEvent.OutputTuple,
       SellEvent.OutputObject
@@ -936,26 +475,15 @@ export interface TambrDynamicBondingCurve extends BaseContract {
       SellEvent.OutputObject
     >;
 
-    "TokenCreated(address,string,string,uint256,uint256)": TypedContractEvent<
-      TokenCreatedEvent.InputTuple,
-      TokenCreatedEvent.OutputTuple,
-      TokenCreatedEvent.OutputObject
+    "TreasuryUpdated(address)": TypedContractEvent<
+      TreasuryUpdatedEvent.InputTuple,
+      TreasuryUpdatedEvent.OutputTuple,
+      TreasuryUpdatedEvent.OutputObject
     >;
-    TokenCreated: TypedContractEvent<
-      TokenCreatedEvent.InputTuple,
-      TokenCreatedEvent.OutputTuple,
-      TokenCreatedEvent.OutputObject
-    >;
-
-    "Transfer(address,address,uint256)": TypedContractEvent<
-      TransferEvent.InputTuple,
-      TransferEvent.OutputTuple,
-      TransferEvent.OutputObject
-    >;
-    Transfer: TypedContractEvent<
-      TransferEvent.InputTuple,
-      TransferEvent.OutputTuple,
-      TransferEvent.OutputObject
+    TreasuryUpdated: TypedContractEvent<
+      TreasuryUpdatedEvent.InputTuple,
+      TreasuryUpdatedEvent.OutputTuple,
+      TreasuryUpdatedEvent.OutputObject
     >;
   };
 }

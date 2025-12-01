@@ -42,6 +42,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC2981__factory>;
     getContractFactory(
+      name: "IERC5267",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC5267__factory>;
+    getContractFactory(
+      name: "ERC2771Context",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC2771Context__factory>;
+    getContractFactory(
       name: "ERC2981",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC2981__factory>;
@@ -90,6 +98,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Receiver__factory>;
     getContractFactory(
+      name: "ECDSA",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ECDSA__factory>;
+    getContractFactory(
+      name: "EIP712",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EIP712__factory>;
+    getContractFactory(
       name: "ERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC165__factory>;
@@ -106,13 +122,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Pausable__factory>;
     getContractFactory(
-      name: "ReentrancyGuard",
+      name: "ShortStrings",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ReentrancyGuard__factory>;
+    ): Promise<Contracts.ShortStrings__factory>;
     getContractFactory(
       name: "Strings",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Strings__factory>;
+    getContractFactory(
+      name: "TambrForwarder",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TambrForwarder__factory>;
     getContractFactory(
       name: "GovernanceToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -121,6 +141,10 @@ declare module "hardhat/types/runtime" {
       name: "IRRStablecoin",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IRRStablecoin__factory>;
+    getContractFactory(
+      name: "MultiSigWallet",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MultiSigWallet__factory>;
     getContractFactory(
       name: "SmartTicket",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -137,10 +161,6 @@ declare module "hardhat/types/runtime" {
       name: "TicketMarketplace",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TicketMarketplace__factory>;
-    getContractFactory(
-      name: "UniswapV2Pair",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.UniswapV2Pair__factory>;
     getContractFactory(
       name: "IERC2981",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -182,6 +202,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC2981>;
     getContractAt(
+      name: "IERC5267",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC5267>;
+    getContractAt(
+      name: "ERC2771Context",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC2771Context>;
+    getContractAt(
       name: "ERC2981",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -242,6 +272,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC721Receiver>;
     getContractAt(
+      name: "ECDSA",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ECDSA>;
+    getContractAt(
+      name: "EIP712",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EIP712>;
+    getContractAt(
       name: "ERC165",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -262,15 +302,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Pausable>;
     getContractAt(
-      name: "ReentrancyGuard",
+      name: "ShortStrings",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.ReentrancyGuard>;
+    ): Promise<Contracts.ShortStrings>;
     getContractAt(
       name: "Strings",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.Strings>;
+    getContractAt(
+      name: "TambrForwarder",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TambrForwarder>;
     getContractAt(
       name: "GovernanceToken",
       address: string | ethers.Addressable,
@@ -281,6 +326,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IRRStablecoin>;
+    getContractAt(
+      name: "MultiSigWallet",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MultiSigWallet>;
     getContractAt(
       name: "SmartTicket",
       address: string | ethers.Addressable,
@@ -301,11 +351,6 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.TicketMarketplace>;
-    getContractAt(
-      name: "UniswapV2Pair",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.UniswapV2Pair>;
     getContractAt(
       name: "IERC2981",
       address: string | ethers.Addressable,
@@ -341,6 +386,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC2981>;
     deployContract(
+      name: "IERC5267",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC5267>;
+    deployContract(
+      name: "ERC2771Context",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC2771Context>;
+    deployContract(
       name: "ERC2981",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC2981>;
@@ -389,6 +442,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC721Receiver>;
     deployContract(
+      name: "ECDSA",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ECDSA>;
+    deployContract(
+      name: "EIP712",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EIP712>;
+    deployContract(
       name: "ERC165",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC165>;
@@ -405,13 +466,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Pausable>;
     deployContract(
-      name: "ReentrancyGuard",
+      name: "ShortStrings",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ReentrancyGuard>;
+    ): Promise<Contracts.ShortStrings>;
     deployContract(
       name: "Strings",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Strings>;
+    deployContract(
+      name: "TambrForwarder",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TambrForwarder>;
     deployContract(
       name: "GovernanceToken",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -420,6 +485,10 @@ declare module "hardhat/types/runtime" {
       name: "IRRStablecoin",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IRRStablecoin>;
+    deployContract(
+      name: "MultiSigWallet",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MultiSigWallet>;
     deployContract(
       name: "SmartTicket",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -436,10 +505,6 @@ declare module "hardhat/types/runtime" {
       name: "TicketMarketplace",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TicketMarketplace>;
-    deployContract(
-      name: "UniswapV2Pair",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.UniswapV2Pair>;
     deployContract(
       name: "IERC2981",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -481,6 +546,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC2981>;
     deployContract(
+      name: "IERC5267",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC5267>;
+    deployContract(
+      name: "ERC2771Context",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC2771Context>;
+    deployContract(
       name: "ERC2981",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -541,6 +616,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC721Receiver>;
     deployContract(
+      name: "ECDSA",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ECDSA>;
+    deployContract(
+      name: "EIP712",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EIP712>;
+    deployContract(
       name: "ERC165",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -561,15 +646,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Pausable>;
     deployContract(
-      name: "ReentrancyGuard",
+      name: "ShortStrings",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.ReentrancyGuard>;
+    ): Promise<Contracts.ShortStrings>;
     deployContract(
       name: "Strings",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Strings>;
+    deployContract(
+      name: "TambrForwarder",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TambrForwarder>;
     deployContract(
       name: "GovernanceToken",
       args: any[],
@@ -580,6 +670,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IRRStablecoin>;
+    deployContract(
+      name: "MultiSigWallet",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MultiSigWallet>;
     deployContract(
       name: "SmartTicket",
       args: any[],
@@ -600,11 +695,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TicketMarketplace>;
-    deployContract(
-      name: "UniswapV2Pair",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.UniswapV2Pair>;
     deployContract(
       name: "IERC2981",
       args: any[],

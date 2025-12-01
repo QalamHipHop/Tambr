@@ -40,6 +40,7 @@ export interface IRRStablecoinInterface extends Interface {
       | "getRoleAdmin"
       | "grantRole"
       | "hasRole"
+      | "isTrustedForwarder"
       | "mint"
       | "name"
       | "pause"
@@ -53,6 +54,7 @@ export interface IRRStablecoinInterface extends Interface {
       | "totalSupply"
       | "transfer"
       | "transferFrom"
+      | "trustedForwarder"
       | "unpause"
   ): FunctionFragment;
 
@@ -125,6 +127,10 @@ export interface IRRStablecoinInterface extends Interface {
     values: [BytesLike, AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "isTrustedForwarder",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "mint",
     values: [AddressLike, BigNumberish]
   ): string;
@@ -164,6 +170,10 @@ export interface IRRStablecoinInterface extends Interface {
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "trustedForwarder",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(
@@ -195,6 +205,10 @@ export interface IRRStablecoinInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isTrustedForwarder",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
@@ -224,6 +238,10 @@ export interface IRRStablecoinInterface extends Interface {
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "trustedForwarder",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
@@ -486,6 +504,12 @@ export interface IRRStablecoin extends BaseContract {
     "view"
   >;
 
+  isTrustedForwarder: TypedContractMethod<
+    [forwarder: AddressLike],
+    [boolean],
+    "view"
+  >;
+
   mint: TypedContractMethod<
     [to: AddressLike, amount: BigNumberish],
     [void],
@@ -543,6 +567,8 @@ export interface IRRStablecoin extends BaseContract {
     [boolean],
     "nonpayable"
   >;
+
+  trustedForwarder: TypedContractMethod<[], [string], "view">;
 
   unpause: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -613,6 +639,9 @@ export interface IRRStablecoin extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "isTrustedForwarder"
+  ): TypedContractMethod<[forwarder: AddressLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "mint"
   ): TypedContractMethod<
     [to: AddressLike, amount: BigNumberish],
@@ -671,6 +700,9 @@ export interface IRRStablecoin extends BaseContract {
     [boolean],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "trustedForwarder"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "unpause"
   ): TypedContractMethod<[], [void], "nonpayable">;
