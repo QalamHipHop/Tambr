@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "../interfaces/IOracle.sol";
 
 /**
  * @title TambrDynamicBondingCurve
@@ -24,7 +25,7 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     uint256 public realTokenReserve; // Real reserve of this token
     
     address public oracleAddress; // Address of the oracle that updates the dynamic factor
-    uint256 public dynamicFactor; // Factor to adjust the virtual reserves for dynamic pricing
+
     
     // Fee configuration
     uint256 public constant FEE_PERCENTAGE = 800; // 0.8% = 800 basis points
@@ -97,11 +98,10 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         createdAt = block.timestamp;
         migrationThreshold = _migrationThreshold;
         oracleAddress = _oracleAddress;
-        dynamicFactor = 10000; // Initialize to 100% (10000 basis points)
         
-        // Initialize virtual reserves (PumpFun-like)
-        // Initial virtual base reserve: 30 IRR (or configurable)
-        // Initial virtual token reserve: 1,073,000,000 tokens
+        // Initialize virtual reserves based on Tambr's optimized model
+        // Tambr Initial virtual base reserve: 30 IRR (or configurable)
+        // Tambr Initial virtual token reserve: 1,073,000,000 tokens
         virtualBaseReserve = 30 * 10**18; // 30 IRR with 18 decimals
         virtualTokenReserve = 1_073_000_000 * 10**18; // 1.073B tokens
         
@@ -126,13 +126,10 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     // ============ Oracle Functions ============
     
     /**
-     * @dev Allows the oracle to update the dynamic factor.
-     * The factor is in basis points (e.g., 10000 = 100%).
+     * @dev Fetches the dynamic factor from the registered oracle.
      */
-    function setDynamicFactor(uint256 _dynamicFactor) public {
-        require(msg.sender == oracleAddress, "Only oracle can set factor");
-        require(_dynamicFactor > 0, "Factor must be positive");
-        dynamicFactor = _dynamicFactor;
+    function _getDynamicFactor() internal view returns (uint256) {
+        return IOracle(oracleAddress).getDynamicFactor();
     }
     
     // ============ Public Functions ============
@@ -156,8 +153,11 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         );
         
         // Calculate fees and net base amount
+        // Founder's fee is 0.1% (100 basis points) of the baseTokenAmount
+        uint256 founderFee = (baseTokenAmount * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
+        // Total fee is 0.8% (800 basis points) of the baseTokenAmount
         uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;
-        uint256 founderFee = (totalFee * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
+        // Net base amount is baseTokenAmount - totalFee
         uint256 netBaseAmount = baseTokenAmount - totalFee;
 
         // Calculate token amount using x*y=k formula
@@ -220,8 +220,10 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 grossBaseAmount = _getBaseAmountForTokenAmount(tokenAmount);
         
         // Calculate fees
+        // Total fee is 0.8% (800 basis points) of the grossBaseAmount
         uint256 totalFee = (grossBaseAmount * FEE_PERCENTAGE) / BASIS_POINTS;
-        uint256 founderFee = (totalFee * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
+        // Founder's fee is 0.1% (100 basis points) of the grossBaseAmount
+        uint256 founderFee = (grossBaseAmount * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
         netBaseAmount = grossBaseAmount - totalFee;
         require(netBaseAmount >= minBaseAmount, "Slippage exceeded");
 
@@ -303,8 +305,9 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 netBaseAmount
     ) internal view returns (uint256) {
         // x*y=k formula: tokenAmount = y - (k / (x + netBaseAmount))
-        // Apply dynamic factor to virtual base reserve for dynamic pricing
-        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
+        // Apply dynamic factor to virtual base reserve for Tambr's dynamic pricing
+        uint256 currentDynamicFactor = _getDynamicFactor();
+        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * currentDynamicFactor) / BASIS_POINTS;
         
         // Use a high precision factor (10**18) to perform the multiplication safely
         uint256 PRECISION = 10**18;
@@ -329,8 +332,9 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 tokenAmount
     ) internal view returns (uint256) {
         // x*y=k formula: baseAmount = x - (k / (y - tokenAmount))
-        // Apply dynamic factor to virtual base reserve for dynamic pricing
-        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
+        // Apply dynamic factor to virtual base reserve for Tambr's dynamic pricing
+        uint256 currentDynamicFactor = _getDynamicFactor();
+        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * currentDynamicFactor) / BASIS_POINTS;
         
         // Use a high precision factor (10**18) to perform the multiplication safely
         uint256 PRECISION = 10**18;
