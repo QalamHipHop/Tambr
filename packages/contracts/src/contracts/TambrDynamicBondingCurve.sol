@@ -4,14 +4,14 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
- * @title DynamicBondingCurve
- * @dev Implements PumpFun-like bonding curve with virtual reserves (x*y=k model)
+ * @title TambrDynamicBondingCurve
+ * @dev Implements Tambr's Dynamic Bonding Curve (DBC) with virtual reserves (x*y=k model)
  * Supports automated liquidity provision (ALP) to AMM when threshold is reached
  */
-contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
+contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     // ============ State Variables ============
     
     IERC20 public baseToken; // IRR Stablecoin
@@ -23,10 +23,13 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     uint256 public realBaseReserve; // Real reserve of base token
     uint256 public realTokenReserve; // Real reserve of this token
     
+    address public oracleAddress; // Address of the oracle that updates the dynamic factor
+    uint256 public dynamicFactor; // Factor to adjust the virtual reserves for dynamic pricing
+    
     // Fee configuration
     uint256 public constant FEE_PERCENTAGE = 800; // 0.8% = 800 basis points
     uint256 public constant FOUNDER_FEE_PERCENTAGE = 100; // 0.1% of fees to founder
-    uint256 public constant BASIS_POINTS = 100000; // 100%
+    uint256 public constant BASIS_POINTS = 10000; // 100%
     
     // Migration parameters
     uint256 public migrationThreshold; // Base reserve amount to trigger ALP
@@ -82,8 +85,9 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         string memory imageUrl,
         address _baseToken,
         address _founderAddress,
-        uint256 _migrationThreshold
-    ) ERC20(name, symbol) {
+        uint256 _migrationThreshold,
+        address _oracleAddress
+    ) ERC20(name, symbol) Ownable(msg.sender) {
         baseToken = IERC20(_baseToken);
         founderAddress = _founderAddress;
         tokenSymbol = symbol;
@@ -92,6 +96,8 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         tokenCreator = msg.sender;
         createdAt = block.timestamp;
         migrationThreshold = _migrationThreshold;
+        oracleAddress = _oracleAddress;
+        dynamicFactor = 10000; // Initialize to 100% (10000 basis points)
         
         // Initialize virtual reserves (PumpFun-like)
         // Initial virtual base reserve: 30 IRR (or configurable)
@@ -115,6 +121,18 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
             virtualBaseReserve,
             virtualTokenReserve
         );
+    }
+    
+    // ============ Oracle Functions ============
+    
+    /**
+     * @dev Allows the oracle to update the dynamic factor.
+     * The factor is in basis points (e.g., 10000 = 100%).
+     */
+    function setDynamicFactor(uint256 _dynamicFactor) public {
+        require(msg.sender == oracleAddress, "Only oracle can set factor");
+        require(_dynamicFactor > 0, "Factor must be positive");
+        dynamicFactor = _dynamicFactor;
     }
     
     // ============ Public Functions ============
@@ -148,8 +166,10 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         
         // Update reserves
         virtualBaseReserve += baseTokenAmount;
+        require(virtualTokenReserve >= tokenAmount, "Virtual token reserve underflow");
         virtualTokenReserve -= tokenAmount;
         realBaseReserve += netBaseAmount;
+        require(realTokenReserve >= tokenAmount, "Insufficient real token reserve");
         realTokenReserve -= tokenAmount;
         
         // Transfer tokens to buyer
@@ -206,8 +226,10 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 netBaseAmount = baseTokenAmount - totalFee;
         
         // Update reserves
+        require(virtualBaseReserve >= baseTokenAmount, "Virtual base reserve underflow");
         virtualBaseReserve -= baseTokenAmount;
         virtualTokenReserve += tokenAmount;
+        require(realBaseReserve >= netBaseAmount, "Real base reserve underflow");
         realBaseReserve -= netBaseAmount;
         realTokenReserve += tokenAmount;
         
@@ -261,10 +283,22 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 netBaseAmount = baseTokenAmount - totalFee;
         
         // x*y=k formula: tokenAmount = y - (k / (x + netBaseAmount))
-        uint256 k = virtualBaseReserve * virtualTokenReserve;
-        uint256 newVirtualBase = virtualBaseReserve + baseTokenAmount;
-        uint256 newVirtualToken = k / newVirtualBase;
+        // Apply dynamic factor to virtual base reserve for dynamic pricing
+        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
         
+        // Use a high precision factor (10**18) to perform the multiplication safely
+        uint256 PRECISION = 10**18;
+        
+        // k = x * y. We multiply first to maintain precision, then divide by PRECISION.
+        uint256 k = (adjustedVirtualBaseReserve * virtualTokenReserve) / PRECISION;
+        
+        uint256 newVirtualBase = adjustedVirtualBaseReserve + netBaseAmount;
+        
+        // newVirtualToken = k / newVirtualBase. We multiply by PRECISION to compensate for the earlier division.
+        uint256 newVirtualToken = (k * PRECISION) / newVirtualBase;
+        
+        // Prevent underflow and ensure the calculated token amount is valid
+        require(virtualTokenReserve >= newVirtualToken, "Virtual token reserve underflow in calculation");
         return virtualTokenReserve - newVirtualToken;
     }
     
@@ -275,11 +309,23 @@ contract DynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         uint256 tokenAmount
     ) public view returns (uint256) {
         // x*y=k formula: baseAmount = x - (k / (y - tokenAmount))
-        uint256 k = virtualBaseReserve * virtualTokenReserve;
-        uint256 newVirtualToken = virtualTokenReserve - tokenAmount;
-        uint256 newVirtualBase = k / newVirtualToken;
+        // Apply dynamic factor to virtual base reserve for dynamic pricing
+        uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
         
-        uint256 baseTokenAmount = virtualBaseReserve - newVirtualBase;
+        // Use a high precision factor (10**18) to perform the multiplication safely
+        uint256 PRECISION = 10**18;
+        
+        // k = x * y. We multiply first to maintain precision, then divide by PRECISION.
+        uint256 k = (adjustedVirtualBaseReserve * virtualTokenReserve) / PRECISION;
+        
+        uint256 newVirtualToken = virtualTokenReserve - tokenAmount;
+        
+        // newVirtualBase = k / newVirtualToken. We multiply by PRECISION to compensate for the earlier division.
+        uint256 newVirtualBase = (k * PRECISION) / newVirtualToken;
+        
+        // Prevent underflow
+        require(newVirtualBase >= adjustedVirtualBaseReserve, "Virtual base reserve underflow in calculation");
+        uint256 baseTokenAmount = newVirtualBase - adjustedVirtualBaseReserve;
         
         // Apply fee
         uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;

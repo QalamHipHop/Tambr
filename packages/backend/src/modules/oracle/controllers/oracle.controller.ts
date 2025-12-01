@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Post, Param } from "@nestjs/common";
 import { OracleService } from "../services/oracle.service";
 
 @Controller("oracle")
@@ -45,6 +45,30 @@ export class OracleController {
       tokenAddress,
       marketCap,
       currency: "IRR",
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * POST /oracle/update-dynamic-factor/:dbcAddress
+   * Calculates and updates the dynamic factor for the DBC contract
+   */
+  @Post("update-dynamic-factor/:dbcAddress")
+  async updateDynamicFactor(@Param("dbcAddress") dbcAddress: string) {
+    // 1. Calculate the new dynamic factor
+    const newFactor = await this.oracleService.calculateDynamicFactor();
+
+    // 2. Send the update transaction to the DBC contract (mocked)
+    const result = await this.oracleService.updateDynamicFactor(
+      dbcAddress,
+      newFactor
+    );
+
+    return {
+      message: "Dynamic factor update triggered successfully.",
+      dbcAddress,
+      newFactor,
+      result,
       timestamp: new Date(),
     };
   }

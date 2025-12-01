@@ -1,16 +1,18 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { IRRStablecoin, DynamicBondingCurve } from "../typechain-types";
+import { IRRStablecoin, TambrDynamicBondingCurve } from "../typechain-types";
 
-describe("DynamicBondingCurve", function () {
+describe("TambrDynamicBondingCurve", function () {
   let irrStablecoin: IRRStablecoin;
-  let dbc: DynamicBondingCurve;
+  let dbc: TambrDynamicBondingCurve;
   let owner: any;
   let user1: any;
   let user2: any;
+  let founder: any;
+  let oracle: any;
 
   beforeEach(async function () {
-    [owner, user1, user2] = await ethers.getSigners();
+    [owner, user1, user2, founder, oracle] = await ethers.getSigners();
 
     // Deploy IRRStablecoin
     const IRRStablecoinFactory = await ethers.getContractFactory("IRRStablecoin");
@@ -21,8 +23,8 @@ describe("DynamicBondingCurve", function () {
     await irrStablecoin.mint(user1.address, ethers.parseEther("1000"));
     await irrStablecoin.mint(user2.address, ethers.parseEther("1000"));
 
-    // Deploy DynamicBondingCurve
-    const DBCFactory = await ethers.getContractFactory("DynamicBondingCurve");
+    // Deploy TambrDynamicBondingCurve
+    const DBCFactory = await ethers.getContractFactory("TambrDynamicBondingCurve");
     const irrAddress = await irrStablecoin.getAddress();
     dbc = await DBCFactory.deploy(
       "Test Token",
@@ -30,8 +32,9 @@ describe("DynamicBondingCurve", function () {
       "A test token",
       "https://example.com/test.png",
       irrAddress,
-      owner.address,
-      ethers.parseEther("100")
+      founder.address,
+      ethers.parseEther("100"),
+      oracle.address
     );
     await dbc.waitForDeployment();
   });
@@ -80,11 +83,11 @@ describe("DynamicBondingCurve", function () {
         .connect(user1)
         .approve(await dbc.getAddress(), buyAmount);
 
-      const initialFounderBalance = await irrStablecoin.balanceOf(owner.address);
+      const initialFounderBalance = await irrStablecoin.balanceOf(founder.address);
 
       await dbc.connect(user1).buy(buyAmount, 0);
 
-      const finalFounderBalance = await irrStablecoin.balanceOf(owner.address);
+      const finalFounderBalance = await irrStablecoin.balanceOf(founder.address);
       expect(finalFounderBalance).to.be.gt(initialFounderBalance);
     });
   });
@@ -106,12 +109,13 @@ describe("DynamicBondingCurve", function () {
       await dbc.connect(user1).approve(await dbc.getAddress(), tokenBalance);
 
       // Sell tokens
-      const tx = await dbc.connect(user1).sell(tokenBalance, 0);
+      const sellAmount = tokenBalance / 2n;
+      const tx = await dbc.connect(user1).sell(sellAmount, 0);
       await tx.wait();
-
+      
       // Check balance is reduced
       const finalBalance = await dbc.balanceOf(user1.address);
-      expect(finalBalance).to.equal(0);
+      expect(finalBalance).to.equal(tokenBalance - sellAmount);
     });
   });
 

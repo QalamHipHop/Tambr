@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Body, Param } from "@nestjs/common";
 import { KycService } from "../services/kyc.service";
 import { CreateKycDto } from "../dto/create-kyc.dto";
+import { SubmitKycLevel2Dto } from "../dto/submit-kyc-level2.dto";
 
 @Controller("kyc")
 export class KycController {
@@ -11,8 +12,17 @@ export class KycController {
    * Submit KYC Level 1 verification
    */
   @Post("submit")
-  async submitKyc(@Body() createKycDto: CreateKycDto) {
+  async submitKycLevel1(@Body() createKycDto: CreateKycDto) {
     return this.kycService.submitKycLevel1(createKycDto);
+  }
+
+  /**
+   * POST /kyc/submit-level2
+   * Submit KYC Level 2 verification
+   */
+  @Post("submit-level2")
+  async submitKycLevel2(@Body() submitKycLevel2Dto: SubmitKycLevel2Dto) {
+    return this.kycService.submitKycLevel2(submitKycLevel2Dto);
   }
 
   /**

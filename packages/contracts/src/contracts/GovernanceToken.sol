@@ -16,7 +16,7 @@ contract GovernanceToken is ERC20, Ownable {
     
     event FounderAllocationSet(address indexed founder, uint256 amount);
     
-    constructor(address _founderAddress) ERC20("Tambr Governance Token", "TAMBR") {
+    constructor(address _founderAddress) ERC20("Tambr Governance Token", "TAMBR") Ownable(msg.sender) {
         require(_founderAddress != address(0), "Invalid founder address");
         
         founderAddress = _founderAddress;

@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "paths": {
+      "@tambr/contracts/*": ["../../packages/contracts/src/*"],
+      "@tambr/backend/*": ["../../packages/backend/src/*"],
+      "@tambr/shared/*": ["../../packages/shared/src/*"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

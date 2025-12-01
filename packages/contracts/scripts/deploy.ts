@@ -16,6 +16,7 @@ async function main() {
 
   // 2. Deploy GovernanceToken with founder address
   const founderAddress = process.env.FOUNDER_ADDRESS || deployer.address;
+  const oracleAddress = process.env.ORACLE_ADDRESS || deployer.address; // Use deployer as mock oracle
   console.log("\n2. Deploying GovernanceToken...");
   const GovernanceToken = await ethers.getContractFactory("GovernanceToken");
   const governanceToken = await GovernanceToken.deploy(founderAddress);
@@ -26,8 +27,8 @@ async function main() {
 
   // 3. Deploy DynamicBondingCurve
   console.log("\n3. Deploying DynamicBondingCurve...");
-  const DynamicBondingCurve = await ethers.getContractFactory(
-    "DynamicBondingCurve"
+  const TambrDynamicBondingCurve = await ethers.getContractFactory(
+    "TambrDynamicBondingCurve"
   );
 
   // Example parameters for a test token
@@ -39,20 +40,22 @@ async function main() {
     baseToken: irrAddress,
     founderAddress: founderAddress,
     migrationThreshold: ethers.parseEther("100"), // 100 IRR threshold
+    oracleAddress: oracleAddress,
   };
 
-  const dbc = await DynamicBondingCurve.deploy(
+  const dbc = await TambrDynamicBondingCurve.deploy(
     dbcParams.name,
     dbcParams.symbol,
     dbcParams.description,
     dbcParams.imageUrl,
     dbcParams.baseToken,
     dbcParams.founderAddress,
-    dbcParams.migrationThreshold
+    dbcParams.migrationThreshold,
+    dbcParams.oracleAddress
   );
   await dbc.waitForDeployment();
   const dbcAddress = await dbc.getAddress();
-  console.log("DynamicBondingCurve deployed to:", dbcAddress);
+  console.log("TambrDynamicBondingCurve deployed to:", dbcAddress);
   console.log("Founder fee: 0.1% of 0.8% transaction fee");
 
   // 4. Deploy SmartTicket
@@ -88,7 +91,8 @@ async function main() {
     irrAddress,
     dbcAddress,
     "Tambr LP",
-    "TAMBR-LP"
+    "TAMBR-LP",
+    deployer.address // Initial owner for the AMM pair
   );
   await ammPair.waitForDeployment();
   const ammAddress = await ammPair.getAddress();
@@ -110,6 +114,7 @@ async function main() {
     irrStablecoin: irrAddress,
     governanceToken: gtAddress,
     dynamicBondingCurve: dbcAddress,
+    oracleAddress: oracleAddress,
     smartTicket: ticketAddress,
     soulboundToken: sbtAddress,
     ammPair: ammAddress,

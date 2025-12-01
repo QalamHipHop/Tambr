@@ -35,7 +35,7 @@ contract SmartTicket is ERC721, ERC721Enumerable, ERC721Royalty, Ownable {
         string memory _baseURI,
         address _royaltyReceiver,
         uint96 _royaltyPercentage
-    ) ERC721(name, symbol) {
+    ) ERC721(name, symbol) Ownable(msg.sender) {
         baseURI = _baseURI;
         royaltyReceiver = _royaltyReceiver;
         royaltyPercentage = _royaltyPercentage;

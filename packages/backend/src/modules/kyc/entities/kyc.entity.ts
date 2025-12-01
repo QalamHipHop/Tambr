@@ -26,6 +26,12 @@ export class KycEntity {
   @Column({ nullable: true })
   verificationHash: string; // Hash of verification data
 
+  @Column({ nullable: true })
+  idCardImage: string; // URL to the uploaded ID card image for Level 2
+
+  @Column({ nullable: true })
+  selfieVideo: string; // URL to the uploaded selfie video for Level 2
+
   @Column({ type: "jsonb", nullable: true })
   metadata: Record<string, any>;
 

@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -39,8 +39,9 @@ contract UniswapV2Pair is ERC20, ReentrancyGuard, Ownable {
         address _token0,
         address _token1,
         string memory lpName,
-        string memory lpSymbol
-    ) ERC20(lpName, lpSymbol) {
+        string memory lpSymbol,
+        address initialOwner
+    ) ERC20(lpName, lpSymbol) Ownable(initialOwner) {
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);
     }

@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm -r test",
     "install:all": "pnpm install",
     "build:all": "pnpm -r build",
     "dev:frontend": "pnpm --filter @tambr/frontend dev",
     "start:backend": "pnpm --filter @tambr/backend start:dev",
+    "start:relayer": "pnpm --filter @tambr/relayer start:dev",
     "start:relayer": "pnpm --filter @tambr/relayer start:dev"
   },
 

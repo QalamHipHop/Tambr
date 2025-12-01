@@ -30,7 +30,7 @@ contract SoulboundToken is ERC721, Ownable {
         string memory name,
         string memory symbol,
         string memory _baseURI
-    ) ERC721(name, symbol) {
+    ) ERC721(name, symbol) Ownable(msg.sender) {
         baseURI = _baseURI;
     }
     
@@ -95,31 +95,20 @@ contract SoulboundToken is ERC721, Ownable {
     }
     
     /**
-     * @dev Override transfer functions to prevent transfers (soulbound)
+     * @dev Hook that is called before any token transfer.
+     * Reverts if the transfer is not a mint or burn (i.e., a transfer between two non-zero addresses).
      */
-    function transferFrom(address from, address to, uint256 tokenId)
-        public
-        override
-        pure
+    function _update(address to, uint256 tokenId, address auth)
+        internal
+        override(ERC721)
+        returns (address)
     {
-        revert("Soulbound tokens cannot be transferred");
-    }
-    
-    function safeTransferFrom(address from, address to, uint256 tokenId)
-        public
-        override
-        pure
-    {
-        revert("Soulbound tokens cannot be transferred");
-    }
-    
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory data
-    ) public override pure {
-        revert("Soulbound tokens cannot be transferred");
+        address from = _ownerOf(tokenId);
+        // Prevent transfer between two non-zero addresses (i.e., not mint or burn)
+        if (from != address(0) && to != address(0)) {
+            revert("Soulbound tokens cannot be transferred");
+        }
+        return super._update(to, tokenId, auth);
     }
     
     // Helper function to convert uint to string

@@ -10,7 +10,17 @@ const config: HardhatUserConfig = {
         enabled: true,
         runs: 200,
       },
+      // Fix for pnpm monorepo
+      libraries: {},
+      outputSelection: {},
+      metadata: {
+        bytecodeHash: "none",
+      },
+      evmVersion: "istanbul",
+      viaIR: true,
+
     },
+
   },
   networks: {
     hardhat: {
