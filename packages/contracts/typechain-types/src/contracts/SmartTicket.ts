@@ -32,11 +32,13 @@ export interface SmartTicketInterface extends Interface {
       | "getApproved"
       | "getNextTokenId"
       | "isApprovedForAll"
+      | "isRedeemed"
       | "mint"
       | "mintBatch"
       | "name"
       | "owner"
       | "ownerOf"
+      | "redeemTicket"
       | "renounceOwnership"
       | "royaltyInfo"
       | "royaltyPercentage"
@@ -63,6 +65,7 @@ export interface SmartTicketInterface extends Interface {
       | "OwnershipTransferred"
       | "RoyaltyUpdated"
       | "TicketMinted"
+      | "TicketRedeemed"
       | "Transfer"
   ): EventFragment;
 
@@ -87,6 +90,10 @@ export interface SmartTicketInterface extends Interface {
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "isRedeemed",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "mint", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "mintBatch",
@@ -96,6 +103,10 @@ export interface SmartTicketInterface extends Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemTicket",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -176,11 +187,16 @@ export interface SmartTicketInterface extends Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isRedeemed", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemTicket",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -323,6 +339,19 @@ export namespace TicketMintedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace TicketRedeemedEvent {
+  export type InputTuple = [tokenId: BigNumberish, redeemer: AddressLike];
+  export type OutputTuple = [tokenId: bigint, redeemer: string];
+  export interface OutputObject {
+    tokenId: bigint;
+    redeemer: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace TransferEvent {
   export type InputTuple = [
     from: AddressLike,
@@ -404,6 +433,8 @@ export interface SmartTicket extends BaseContract {
     "view"
   >;
 
+  isRedeemed: TypedContractMethod<[tokenId: BigNumberish], [boolean], "view">;
+
   mint: TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
 
   mintBatch: TypedContractMethod<
@@ -417,6 +448,12 @@ export interface SmartTicket extends BaseContract {
   owner: TypedContractMethod<[], [string], "view">;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+
+  redeemTicket: TypedContractMethod<
+    [tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -524,6 +561,9 @@ export interface SmartTicket extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "isRedeemed"
+  ): TypedContractMethod<[tokenId: BigNumberish], [boolean], "view">;
+  getFunction(
     nameOrSignature: "mint"
   ): TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
   getFunction(
@@ -542,6 +582,9 @@ export interface SmartTicket extends BaseContract {
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  getFunction(
+    nameOrSignature: "redeemTicket"
+  ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -663,6 +706,13 @@ export interface SmartTicket extends BaseContract {
     TicketMintedEvent.OutputObject
   >;
   getEvent(
+    key: "TicketRedeemed"
+  ): TypedContractEvent<
+    TicketRedeemedEvent.InputTuple,
+    TicketRedeemedEvent.OutputTuple,
+    TicketRedeemedEvent.OutputObject
+  >;
+  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
@@ -724,6 +774,17 @@ export interface SmartTicket extends BaseContract {
       TicketMintedEvent.InputTuple,
       TicketMintedEvent.OutputTuple,
       TicketMintedEvent.OutputObject
+    >;
+
+    "TicketRedeemed(uint256,address)": TypedContractEvent<
+      TicketRedeemedEvent.InputTuple,
+      TicketRedeemedEvent.OutputTuple,
+      TicketRedeemedEvent.OutputObject
+    >;
+    TicketRedeemed: TypedContractEvent<
+      TicketRedeemedEvent.InputTuple,
+      TicketRedeemedEvent.OutputTuple,
+      TicketRedeemedEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

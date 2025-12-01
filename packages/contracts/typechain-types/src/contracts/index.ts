@@ -6,4 +6,5 @@ export type { IRRStablecoin } from "./IRRStablecoin";
 export type { SmartTicket } from "./SmartTicket";
 export type { SoulboundToken } from "./SoulboundToken";
 export type { TambrDynamicBondingCurve } from "./TambrDynamicBondingCurve";
+export type { TicketMarketplace } from "./TicketMarketplace";
 export type { UniswapV2Pair } from "./UniswapV2Pair";

@@ -66,5 +66,7 @@ export type { SoulboundToken } from "./src/contracts/SoulboundToken";
 export { SoulboundToken__factory } from "./factories/src/contracts/SoulboundToken__factory";
 export type { TambrDynamicBondingCurve } from "./src/contracts/TambrDynamicBondingCurve";
 export { TambrDynamicBondingCurve__factory } from "./factories/src/contracts/TambrDynamicBondingCurve__factory";
+export type { TicketMarketplace } from "./src/contracts/TicketMarketplace";
+export { TicketMarketplace__factory } from "./factories/src/contracts/TicketMarketplace__factory";
 export type { UniswapV2Pair } from "./src/contracts/UniswapV2Pair";
 export { UniswapV2Pair__factory } from "./factories/src/contracts/UniswapV2Pair__factory";

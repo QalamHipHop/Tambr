@@ -1259,8 +1259,8 @@
       ]
     },
     "/home/ubuntu/Tambr/packages/contracts/src/contracts/SmartTicket.sol": {
-      "lastModificationDate": 1764615180546,
-      "contentHash": "a22e2a12b2b5f1a3ff42bbb9ebf2a59c",
+      "lastModificationDate": 1764623547930,
+      "contentHash": "c606234a8d14f99bc39ef383417ae8a3",
       "sourceName": "src/contracts/SmartTicket.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -1304,52 +1304,6 @@
         "SmartTicket"
       ]
     },
-    "/home/ubuntu/Tambr/packages/contracts/src/contracts/UniswapV2Pair.sol": {
-      "lastModificationDate": 1764615154862,
-      "contentHash": "97f3447d07f9490501480aeee3ab156b",
-      "sourceName": "src/contracts/UniswapV2Pair.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "libraries": {},
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "bytecodeHash": "none"
-          },
-          "evmVersion": "istanbul",
-          "viaIR": true
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "UniswapV2Pair"
-      ]
-    },
     "/home/ubuntu/Tambr/node_modules/.pnpm/@openzeppelin+contracts@5.4.0/node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
       "lastModificationDate": 1764615016961,
       "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
@@ -1389,52 +1343,6 @@
       ],
       "artifacts": [
         "ReentrancyGuard"
-      ]
-    },
-    "/home/ubuntu/Tambr/packages/contracts/src/contracts/TambrDynamicBondingCurve.sol": {
-      "lastModificationDate": 1764617725545,
-      "contentHash": "40ecbb80109258ac585f5cc19ffcbf5b",
-      "sourceName": "src/contracts/TambrDynamicBondingCurve.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "libraries": {},
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "bytecodeHash": "none"
-          },
-          "evmVersion": "istanbul",
-          "viaIR": true
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "TambrDynamicBondingCurve"
       ]
     },
     "/home/ubuntu/Tambr/packages/contracts/src/contracts/SoulboundToken.sol": {
@@ -1479,6 +1387,93 @@
       ],
       "artifacts": [
         "SoulboundToken"
+      ]
+    },
+    "/home/ubuntu/Tambr/packages/contracts/src/contracts/TicketMarketplace.sol": {
+      "lastModificationDate": 1764623558098,
+      "contentHash": "1c382b60412c34eccc7dc822f052aae5",
+      "sourceName": "src/contracts/TicketMarketplace.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "libraries": {},
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "bytecodeHash": "none"
+          },
+          "evmVersion": "istanbul",
+          "viaIR": true
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "../interfaces/IERC2981.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TicketMarketplace"
+      ]
+    },
+    "/home/ubuntu/Tambr/packages/contracts/src/interfaces/IERC2981.sol": {
+      "lastModificationDate": 1764623555278,
+      "contentHash": "88b72edb6c71df63d9017e308935a2ae",
+      "sourceName": "src/interfaces/IERC2981.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "libraries": {},
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "bytecodeHash": "none"
+          },
+          "evmVersion": "istanbul",
+          "viaIR": true
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC2981"
       ]
     }
   }

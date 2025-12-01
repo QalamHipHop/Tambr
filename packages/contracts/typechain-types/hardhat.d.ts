@@ -134,9 +134,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TambrDynamicBondingCurve__factory>;
     getContractFactory(
+      name: "TicketMarketplace",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TicketMarketplace__factory>;
+    getContractFactory(
       name: "UniswapV2Pair",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.UniswapV2Pair__factory>;
+    getContractFactory(
+      name: "IERC2981",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC2981__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -289,10 +297,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.TambrDynamicBondingCurve>;
     getContractAt(
+      name: "TicketMarketplace",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TicketMarketplace>;
+    getContractAt(
       name: "UniswapV2Pair",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.UniswapV2Pair>;
+    getContractAt(
+      name: "IERC2981",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC2981>;
 
     deployContract(
       name: "AccessControl",
@@ -415,9 +433,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TambrDynamicBondingCurve>;
     deployContract(
+      name: "TicketMarketplace",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TicketMarketplace>;
+    deployContract(
       name: "UniswapV2Pair",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.UniswapV2Pair>;
+    deployContract(
+      name: "IERC2981",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC2981>;
 
     deployContract(
       name: "AccessControl",
@@ -570,10 +596,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TambrDynamicBondingCurve>;
     deployContract(
+      name: "TicketMarketplace",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.TicketMarketplace>;
+    deployContract(
       name: "UniswapV2Pair",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.UniswapV2Pair>;
+    deployContract(
+      name: "IERC2981",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC2981>;
 
     // default types
     getContractFactory(

@@ -5,7 +5,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { KycModule } from "./modules/kyc/kyc.module";
 import { WalletModule } from "./modules/wallet/wallet.module";
 import { OracleModule } from "./modules/oracle/oracle.module";
-import { TokenModule } from "./modules/token/token.module";
+import { TicketModule } from "./modules/ticket/ticket.module";
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { TokenModule } from "./modules/token/token.module";
     KycModule,
     WalletModule,
     OracleModule,
-    TokenModule,
+    TicketModule,
   ],
   controllers: [],
   providers: [],

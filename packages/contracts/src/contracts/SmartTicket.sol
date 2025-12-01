@@ -13,6 +13,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract SmartTicket is ERC721, ERC721Enumerable, ERC721Royalty, Ownable {
     uint256 private _nextTokenId = 1;
+    mapping(uint256 => bool) private _redeemed;
     
     string public baseURI;
     address public royaltyReceiver;
@@ -33,9 +34,12 @@ contract SmartTicket is ERC721, ERC721Enumerable, ERC721Royalty, Ownable {
         string memory name,
         string memory symbol,
         string memory _baseURI,
+        address _minter,
         address _royaltyReceiver,
         uint96 _royaltyPercentage
     ) ERC721(name, symbol) Ownable(msg.sender) {
+        // The minter/creator of the event is the owner, but we'll use a separate role for redemption
+        _transferOwnership(_minter);
         baseURI = _baseURI;
         royaltyReceiver = _royaltyReceiver;
         royaltyPercentage = _royaltyPercentage;
@@ -144,6 +148,28 @@ contract SmartTicket is ERC721, ERC721Enumerable, ERC721Royalty, Ownable {
     {
         return super.supportsInterface(interfaceId);
     }
+
+    /**
+     * @dev Marks a ticket as redeemed (used). Only callable by the contract owner (Event Creator/Platform).
+     * The ticket must not have been redeemed already.
+     */
+    function redeemTicket(uint256 tokenId) public onlyOwner {
+        // ownerOf reverts if token does not exist
+        ownerOf(tokenId);
+        require(!_redeemed[tokenId], "SmartTicket: token already redeemed");
+
+        _redeemed[tokenId] = true;
+        emit TicketRedeemed(tokenId, msg.sender);
+    }
+
+    /**
+     * @dev Checks if a ticket has been redeemed.
+     */
+    function isRedeemed(uint256 tokenId) public view returns (bool) {
+        return _redeemed[tokenId];
+    }
+
+    event TicketRedeemed(uint256 indexed tokenId, address indexed redeemer);
     
     // Helper function to convert uint to string
     function _toString(uint256 value) internal pure returns (string memory) {

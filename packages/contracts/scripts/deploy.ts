@@ -16,7 +16,7 @@ async function main() {
 
   // 2. Deploy GovernanceToken with founder address
   const founderAddress = process.env.FOUNDER_ADDRESS || deployer.address;
-  const oracleAddress = process.env.ORACLE_ADDRESS || deployer.address; // Use deployer as mock oracle
+  const marketplaceOwner = deployer.address; // Marketplace owner will be the deployer (platform)
   console.log("\n2. Deploying GovernanceToken...");
   const GovernanceToken = await ethers.getContractFactory("GovernanceToken");
   const governanceToken = await GovernanceToken.deploy(founderAddress);
@@ -25,52 +25,32 @@ async function main() {
   console.log("GovernanceToken deployed to:", gtAddress);
   console.log("Founder allocated 10% of TAMBR tokens");
 
-  // 3. Deploy DynamicBondingCurve
-  console.log("\n3. Deploying DynamicBondingCurve...");
-  const TambrDynamicBondingCurve = await ethers.getContractFactory(
-    "TambrDynamicBondingCurve"
-  );
-
-  // Example parameters for a test token
-  const dbcParams = {
-    name: "Test Token",
-    symbol: "TEST",
-    description: "A test token on Tambr",
-    imageUrl: "https://example.com/test.png",
-    baseToken: irrAddress,
-    founderAddress: founderAddress,
-    migrationThreshold: ethers.parseEther("100"), // 100 IRR threshold
-    oracleAddress: oracleAddress,
-  };
-
-  const dbc = await TambrDynamicBondingCurve.deploy(
-    dbcParams.name,
-    dbcParams.symbol,
-    dbcParams.description,
-    dbcParams.imageUrl,
-    dbcParams.baseToken,
-    dbcParams.founderAddress,
-    dbcParams.migrationThreshold,
-    dbcParams.oracleAddress
-  );
-  await dbc.waitForDeployment();
-  const dbcAddress = await dbc.getAddress();
-  console.log("TambrDynamicBondingCurve deployed to:", dbcAddress);
-  console.log("Founder fee: 0.1% of 0.8% transaction fee");
-
-  // 4. Deploy SmartTicket
-  console.log("\n4. Deploying SmartTicket...");
+  // 3. Deploy SmartTicket (Updated)
   const SmartTicket = await ethers.getContractFactory("SmartTicket");
   const smartTicket = await SmartTicket.deploy(
     "Tambr Smart Ticket",
     "TICKET",
     "https://api.tambr.io/tickets/",
-    founderAddress,
+    marketplaceOwner, // The marketplace owner will be the minter/owner of the ticket contract
+    founderAddress, // The founder address is passed to the constructor for the _minter role, which is now the marketplace owner
     500 // 5% royalty
   );
   await smartTicket.waitForDeployment();
   const ticketAddress = await smartTicket.getAddress();
   console.log("SmartTicket deployed to:", ticketAddress);
+
+  // 4. Deploy TicketMarketplace
+  console.log("\n4. Deploying TicketMarketplace...");
+  const TicketMarketplace = await ethers.getContractFactory("TicketMarketplace");
+  const ticketMarketplace = await TicketMarketplace.deploy(
+    ticketAddress,
+    irrAddress,
+    founderAddress
+  );
+  await ticketMarketplace.waitForDeployment();
+  const marketplaceAddress = await ticketMarketplace.getAddress();
+  console.log("TicketMarketplace deployed to:", marketplaceAddress);
+  console.log("Founder share: 0.2% of secondary market sales");
 
   // 5. Deploy SoulboundToken
   console.log("\n5. Deploying SoulboundToken...");
@@ -84,28 +64,15 @@ async function main() {
   const sbtAddress = await soulboundToken.getAddress();
   console.log("SoulboundToken deployed to:", sbtAddress);
 
-  // 6. Deploy UniswapV2Pair (AMM)
-  console.log("\n6. Deploying UniswapV2Pair (AMM)...");
-  const UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
-  const ammPair = await UniswapV2Pair.deploy(
-    irrAddress,
-    dbcAddress,
-    "Tambr LP",
-    "TAMBR-LP",
-    deployer.address // Initial owner for the AMM pair
-  );
-  await ammPair.waitForDeployment();
-  const ammAddress = await ammPair.getAddress();
-  console.log("UniswapV2Pair deployed to:", ammAddress);
+  // AMM and DBC removed.
 
   // Print summary
   console.log("\n========== DEPLOYMENT SUMMARY ==========");
   console.log("IRRStablecoin:", irrAddress);
   console.log("GovernanceToken:", gtAddress);
-  console.log("DynamicBondingCurve:", dbcAddress);
   console.log("SmartTicket:", ticketAddress);
+  console.log("TicketMarketplace:", marketplaceAddress);
   console.log("SoulboundToken:", sbtAddress);
-  console.log("UniswapV2Pair (AMM):", ammAddress);
   console.log("Founder Address:", founderAddress);
   console.log("========================================");
 
@@ -113,11 +80,9 @@ async function main() {
   const addresses = {
     irrStablecoin: irrAddress,
     governanceToken: gtAddress,
-    dynamicBondingCurve: dbcAddress,
-    oracleAddress: oracleAddress,
     smartTicket: ticketAddress,
+    ticketMarketplace: marketplaceAddress,
     soulboundToken: sbtAddress,
-    ammPair: ammAddress,
     founder: founderAddress,
     deployer: deployer.address,
   };

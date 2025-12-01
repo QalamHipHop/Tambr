@@ -6,4 +6,5 @@ export { IRRStablecoin__factory } from "./IRRStablecoin__factory";
 export { SmartTicket__factory } from "./SmartTicket__factory";
 export { SoulboundToken__factory } from "./SoulboundToken__factory";
 export { TambrDynamicBondingCurve__factory } from "./TambrDynamicBondingCurve__factory";
+export { TicketMarketplace__factory } from "./TicketMarketplace__factory";
 export { UniswapV2Pair__factory } from "./UniswapV2Pair__factory";
