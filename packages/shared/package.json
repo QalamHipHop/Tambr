@@ -1,0 +1,17 @@
+{
+  "name": "@tambr/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities, types, and constants for Tambr",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "ethers": "^6.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  }
+}
