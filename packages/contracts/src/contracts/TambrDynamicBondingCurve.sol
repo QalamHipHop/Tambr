@@ -155,17 +155,17 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
             "Transfer failed"
         );
         
-        // Calculate token amount using x*y=k formula
-        tokenAmount = getTokenAmountForBaseAmount(baseTokenAmount);
-        require(tokenAmount >= minTokenAmount, "Slippage exceeded");
-        
-        // Calculate fees
+        // Calculate fees and net base amount
         uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;
         uint256 founderFee = (totalFee * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
         uint256 netBaseAmount = baseTokenAmount - totalFee;
+
+        // Calculate token amount using x*y=k formula
+        tokenAmount = _getTokenAmountForNetBaseAmount(netBaseAmount);
+        require(tokenAmount >= minTokenAmount, "Slippage exceeded");
         
         // Update reserves
-        virtualBaseReserve += baseTokenAmount;
+        virtualBaseReserve += netBaseAmount;
         require(virtualTokenReserve >= tokenAmount, "Virtual token reserve underflow");
         virtualTokenReserve -= tokenAmount;
         realBaseReserve += netBaseAmount;
@@ -205,7 +205,7 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     function sell(
         uint256 tokenAmount,
         uint256 minBaseAmount
-    ) public nonReentrant returns (uint256 baseTokenAmount) {
+    ) public nonReentrant returns (uint256 netBaseAmount) {
         require(!isMigrated, "Token has migrated to AMM");
         require(tokenAmount > 0, "Amount must be greater than 0");
         require(balanceOf(msg.sender) >= tokenAmount, "Insufficient balance");
@@ -216,18 +216,18 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
             "Token transfer failed"
         );
         
-        // Calculate base token amount using x*y=k formula
-        baseTokenAmount = getBaseAmountForTokenAmount(tokenAmount);
-        require(baseTokenAmount >= minBaseAmount, "Slippage exceeded");
+        // Calculate gross base token amount using x*y=k formula
+        uint256 grossBaseAmount = _getBaseAmountForTokenAmount(tokenAmount);
         
         // Calculate fees
-        uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;
+        uint256 totalFee = (grossBaseAmount * FEE_PERCENTAGE) / BASIS_POINTS;
         uint256 founderFee = (totalFee * FOUNDER_FEE_PERCENTAGE) / BASIS_POINTS;
-        uint256 netBaseAmount = baseTokenAmount - totalFee;
-        
+        netBaseAmount = grossBaseAmount - totalFee;
+        require(netBaseAmount >= minBaseAmount, "Slippage exceeded");
+
         // Update reserves
-        require(virtualBaseReserve >= baseTokenAmount, "Virtual base reserve underflow");
-        virtualBaseReserve -= baseTokenAmount;
+        require(virtualBaseReserve >= grossBaseAmount, "Virtual base reserve underflow");
+        virtualBaseReserve -= grossBaseAmount;
         virtualTokenReserve += tokenAmount;
         require(realBaseReserve >= netBaseAmount, "Real base reserve underflow");
         realBaseReserve -= netBaseAmount;
@@ -248,9 +248,9 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         }
         
         uint256 currentPrice = getCurrentPrice();
-        emit Sell(msg.sender, tokenAmount, baseTokenAmount, currentPrice, founderFee);
+        emit Sell(msg.sender, tokenAmount, grossBaseAmount, currentPrice, founderFee);
         
-        return baseTokenAmount;
+        return netBaseAmount;
     }
     
     // ============ View Functions ============
@@ -273,15 +273,35 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
     }
     
     /**
-     * @dev Calculate token amount for given base token amount
+     * @dev Calculate token amount for given net base token amount
      */
-    function getTokenAmountForBaseAmount(
+    function calculateTokenAmountForBaseAmount(
         uint256 baseTokenAmount
-    ) public view returns (uint256) {
-        // Apply fee
+    ) public view returns (uint256 tokenAmount) {
+        require(baseTokenAmount > 0, "Amount must be greater than 0");
         uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;
         uint256 netBaseAmount = baseTokenAmount - totalFee;
-        
+        return _getTokenAmountForNetBaseAmount(netBaseAmount);
+    }
+
+    /**
+     * @dev Calculate net base token amount for given token amount (for selling)
+     */
+    function calculateBaseAmountForTokenAmount(
+        uint256 tokenAmount
+    ) public view returns (uint256 netBaseAmount) {
+        require(tokenAmount > 0, "Amount must be greater than 0");
+        uint256 grossBaseAmount = _getBaseAmountForTokenAmount(tokenAmount);
+        uint256 totalFee = (grossBaseAmount * FEE_PERCENTAGE) / BASIS_POINTS;
+        return grossBaseAmount - totalFee;
+    }
+
+    /**
+     * @dev Calculate token amount for given net base token amount
+     */
+    function _getTokenAmountForNetBaseAmount(
+        uint256 netBaseAmount
+    ) internal view returns (uint256) {
         // x*y=k formula: tokenAmount = y - (k / (x + netBaseAmount))
         // Apply dynamic factor to virtual base reserve for dynamic pricing
         uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
@@ -297,17 +317,17 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         // newVirtualToken = k / newVirtualBase. We multiply by PRECISION to compensate for the earlier division.
         uint256 newVirtualToken = (k * PRECISION) / newVirtualBase;
         
-        // Prevent underflow and ensure the calculated token amount is valid
+        // Prevent underflow
         require(virtualTokenReserve >= newVirtualToken, "Virtual token reserve underflow in calculation");
         return virtualTokenReserve - newVirtualToken;
     }
     
     /**
-     * @dev Calculate base token amount for given token amount
+     * @dev Calculate gross base token amount for given token amount
      */
-    function getBaseAmountForTokenAmount(
+    function _getBaseAmountForTokenAmount(
         uint256 tokenAmount
-    ) public view returns (uint256) {
+    ) internal view returns (uint256) {
         // x*y=k formula: baseAmount = x - (k / (y - tokenAmount))
         // Apply dynamic factor to virtual base reserve for dynamic pricing
         uint256 adjustedVirtualBaseReserve = (virtualBaseReserve * dynamicFactor) / BASIS_POINTS;
@@ -327,9 +347,7 @@ contract TambrDynamicBondingCurve is ERC20, Ownable, ReentrancyGuard {
         require(newVirtualBase >= adjustedVirtualBaseReserve, "Virtual base reserve underflow in calculation");
         uint256 baseTokenAmount = newVirtualBase - adjustedVirtualBaseReserve;
         
-        // Apply fee
-        uint256 totalFee = (baseTokenAmount * FEE_PERCENTAGE) / BASIS_POINTS;
-        return baseTokenAmount - totalFee;
+        return baseTokenAmount;
     }
     
     /**

@@ -1392,8 +1392,8 @@
       ]
     },
     "/home/ubuntu/Tambr/packages/contracts/src/contracts/TambrDynamicBondingCurve.sol": {
-      "lastModificationDate": 1764616068211,
-      "contentHash": "c6d2e99c9eaedeb055e6890fb592350e",
+      "lastModificationDate": 1764617725545,
+      "contentHash": "40ecbb80109258ac585f5cc19ffcbf5b",
       "sourceName": "src/contracts/TambrDynamicBondingCurve.sol",
       "solcConfig": {
         "version": "0.8.20",

@@ -35,15 +35,15 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
       | "balanceOf"
       | "baseToken"
       | "buy"
+      | "calculateBaseAmountForTokenAmount"
+      | "calculateTokenAmountForBaseAmount"
       | "createdAt"
       | "decimals"
       | "dynamicFactor"
       | "founderAddress"
-      | "getBaseAmountForTokenAmount"
       | "getBondingCurveProgress"
       | "getCurrentPrice"
       | "getMarketCap"
-      | "getTokenAmountForBaseAmount"
       | "isMigrated"
       | "migrationThreshold"
       | "name"
@@ -113,6 +113,14 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     functionFragment: "buy",
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "calculateBaseAmountForTokenAmount",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateTokenAmountForBaseAmount",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "createdAt", values?: undefined): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
@@ -122,10 +130,6 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
   encodeFunctionData(
     functionFragment: "founderAddress",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getBaseAmountForTokenAmount",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getBondingCurveProgress",
@@ -138,10 +142,6 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
   encodeFunctionData(
     functionFragment: "getMarketCap",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getTokenAmountForBaseAmount",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isMigrated",
@@ -245,6 +245,14 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buy", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateBaseAmountForTokenAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateTokenAmountForBaseAmount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "createdAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
@@ -253,10 +261,6 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "founderAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getBaseAmountForTokenAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -269,10 +273,6 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getMarketCap",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTokenAmountForBaseAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isMigrated", data: BytesLike): Result;
@@ -582,6 +582,18 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     "nonpayable"
   >;
 
+  calculateBaseAmountForTokenAmount: TypedContractMethod<
+    [tokenAmount: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  calculateTokenAmountForBaseAmount: TypedContractMethod<
+    [baseTokenAmount: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
   createdAt: TypedContractMethod<[], [bigint], "view">;
 
   decimals: TypedContractMethod<[], [bigint], "view">;
@@ -590,23 +602,11 @@ export interface TambrDynamicBondingCurve extends BaseContract {
 
   founderAddress: TypedContractMethod<[], [string], "view">;
 
-  getBaseAmountForTokenAmount: TypedContractMethod<
-    [tokenAmount: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
   getBondingCurveProgress: TypedContractMethod<[], [bigint], "view">;
 
   getCurrentPrice: TypedContractMethod<[], [bigint], "view">;
 
   getMarketCap: TypedContractMethod<[], [bigint], "view">;
-
-  getTokenAmountForBaseAmount: TypedContractMethod<
-    [baseTokenAmount: BigNumberish],
-    [bigint],
-    "view"
-  >;
 
   isMigrated: TypedContractMethod<[], [boolean], "view">;
 
@@ -722,6 +722,12 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "calculateBaseAmountForTokenAmount"
+  ): TypedContractMethod<[tokenAmount: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "calculateTokenAmountForBaseAmount"
+  ): TypedContractMethod<[baseTokenAmount: BigNumberish], [bigint], "view">;
+  getFunction(
     nameOrSignature: "createdAt"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -734,9 +740,6 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     nameOrSignature: "founderAddress"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "getBaseAmountForTokenAmount"
-  ): TypedContractMethod<[tokenAmount: BigNumberish], [bigint], "view">;
-  getFunction(
     nameOrSignature: "getBondingCurveProgress"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -745,9 +748,6 @@ export interface TambrDynamicBondingCurve extends BaseContract {
   getFunction(
     nameOrSignature: "getMarketCap"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getTokenAmountForBaseAmount"
-  ): TypedContractMethod<[baseTokenAmount: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "isMigrated"
   ): TypedContractMethod<[], [boolean], "view">;
