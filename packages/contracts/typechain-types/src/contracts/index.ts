@@ -3,10 +3,14 @@
 /* eslint-disable */
 import type * as forwarderSol from "./Forwarder.sol";
 export type { forwarderSol };
+import type * as irrStablecoinSol from "./IRRStablecoin.sol";
+export type { irrStablecoinSol };
 export type { GovernanceToken } from "./GovernanceToken";
-export type { IRRStablecoin } from "./IRRStablecoin";
+export type { MockKYC } from "./MockKYC";
+export type { MockPriceOracle } from "./MockPriceOracle";
 export type { MultiSigWallet } from "./MultiSigWallet";
 export type { SmartTicket } from "./SmartTicket";
+export type { SocialRecoveryWallet } from "./SocialRecoveryWallet";
 export type { SoulboundToken } from "./SoulboundToken";
 export type { TambrDynamicBondingCurve } from "./TambrDynamicBondingCurve";
 export type { TicketMarketplace } from "./TicketMarketplace";

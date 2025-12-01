@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Tambr Relayer API
+  version: 1.0.0
+  description: API documentation for the Tambr Gasless Transaction Relayer Service.
+
+servers:
+  - url: https://api.tambr.io/relayer
+    description: Production Server
+  - url: http://localhost:3001
+    description: Local Development Server
+
+paths:
+  /relay:
+    post:
+      summary: Relays a meta-transaction (EIP-2771)
+      description: Submits a signed EIP-712 message (ForwardRequest) to be executed on-chain by the relayer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - request
+                - signature
+              properties:
+                request:
+                  type: object
+                  description: The EIP-712 ForwardRequest object.
+                  properties:
+                    from:
+                      type: string
+                      format: address
+                      description: The address of the user initiating the transaction.
+                    to:
+                      type: string
+                      format: address
+                      description: The target contract address.
+                    value:
+                      type: string
+                      description: The amount of native token (e.g., ETH) to send.
+                    gas:
+                      type: string
+                      description: The gas limit for the execution.
+                    nonce:
+                      type: string
+                      description: The user's current nonce for the forwarder contract.
+                    data:
+                      type: string
+                      format: byte
+                      description: The encoded function call data.
+                signature:
+                  type: string
+                  format: byte
+                  description: The EIP-712 signature from the user.
+      responses:
+        '200':
+          description: Transaction successfully relayed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  txHash:
+                    type: string
+                    description: The hash of the transaction sent by the relayer.
+        '400':
+          description: Invalid request or signature.
+        '429':
+          description: Rate limit exceeded.

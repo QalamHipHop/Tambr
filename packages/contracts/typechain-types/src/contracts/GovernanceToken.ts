@@ -23,36 +23,69 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export declare namespace Checkpoints {
+  export type Checkpoint208Struct = {
+    _key: BigNumberish;
+    _value: BigNumberish;
+  };
+
+  export type Checkpoint208StructOutput = [_key: bigint, _value: bigint] & {
+    _key: bigint;
+    _value: bigint;
+  };
+}
+
 export interface GovernanceTokenInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "CLOCK_MODE"
+      | "DOMAIN_SEPARATOR"
       | "FOUNDER_ALLOCATION_PERCENTAGE"
       | "TOTAL_SUPPLY"
       | "allowance"
       | "approve"
       | "balanceOf"
+      | "checkpoints"
+      | "clock"
       | "decimals"
+      | "delegate"
+      | "delegateBySig"
+      | "delegates"
+      | "eip712Domain"
       | "founderAddress"
       | "getFounderAllocationPercentage"
       | "getFounderBalance"
+      | "getPastTotalSupply"
+      | "getPastVotes"
+      | "getVotes"
       | "name"
-      | "owner"
-      | "renounceOwnership"
+      | "nonces"
+      | "numCheckpoints"
+      | "permit"
       | "symbol"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
-      | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
       | "Approval"
+      | "DelegateChanged"
+      | "DelegateVotesChanged"
+      | "EIP712DomainChanged"
       | "FounderAllocationSet"
-      | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "CLOCK_MODE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "FOUNDER_ALLOCATION_PERCENTAGE",
     values?: undefined
@@ -73,7 +106,35 @@ export interface GovernanceTokenInterface extends Interface {
     functionFragment: "balanceOf",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "checkpoints",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "clock", values?: undefined): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "delegate",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegateBySig",
+    values: [
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegates",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "eip712Domain",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "founderAddress",
     values?: undefined
@@ -86,11 +147,35 @@ export interface GovernanceTokenInterface extends Interface {
     functionFragment: "getFounderBalance",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
+    functionFragment: "getPastTotalSupply",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPastVotes",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getVotes",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [AddressLike]): string;
+  encodeFunctionData(
+    functionFragment: "numCheckpoints",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -105,11 +190,12 @@ export interface GovernanceTokenInterface extends Interface {
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [AddressLike]
-  ): string;
 
+  decodeFunctionResult(functionFragment: "CLOCK_MODE", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "FOUNDER_ALLOCATION_PERCENTAGE",
     data: BytesLike
@@ -121,7 +207,22 @@ export interface GovernanceTokenInterface extends Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "checkpoints",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "clock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "delegateBySig",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "eip712Domain",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "founderAddress",
     data: BytesLike
@@ -134,12 +235,22 @@ export interface GovernanceTokenInterface extends Interface {
     functionFragment: "getFounderBalance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: "getPastTotalSupply",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPastVotes",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "numCheckpoints",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -148,10 +259,6 @@ export interface GovernanceTokenInterface extends Interface {
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 }
@@ -174,12 +281,21 @@ export namespace ApprovalEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace FounderAllocationSetEvent {
-  export type InputTuple = [founder: AddressLike, amount: BigNumberish];
-  export type OutputTuple = [founder: string, amount: bigint];
+export namespace DelegateChangedEvent {
+  export type InputTuple = [
+    delegator: AddressLike,
+    fromDelegate: AddressLike,
+    toDelegate: AddressLike
+  ];
+  export type OutputTuple = [
+    delegator: string,
+    fromDelegate: string,
+    toDelegate: string
+  ];
   export interface OutputObject {
-    founder: string;
-    amount: bigint;
+    delegator: string;
+    fromDelegate: string;
+    toDelegate: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -187,12 +303,44 @@ export namespace FounderAllocationSetEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace OwnershipTransferredEvent {
-  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
-  export type OutputTuple = [previousOwner: string, newOwner: string];
+export namespace DelegateVotesChangedEvent {
+  export type InputTuple = [
+    delegate: AddressLike,
+    previousVotes: BigNumberish,
+    newVotes: BigNumberish
+  ];
+  export type OutputTuple = [
+    delegate: string,
+    previousVotes: bigint,
+    newVotes: bigint
+  ];
   export interface OutputObject {
-    previousOwner: string;
-    newOwner: string;
+    delegate: string;
+    previousVotes: bigint;
+    newVotes: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace EIP712DomainChangedEvent {
+  export type InputTuple = [];
+  export type OutputTuple = [];
+  export interface OutputObject {}
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace FounderAllocationSetEvent {
+  export type InputTuple = [founder: AddressLike, amount: BigNumberish];
+  export type OutputTuple = [founder: string, amount: bigint];
+  export interface OutputObject {
+    founder: string;
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -261,6 +409,10 @@ export interface GovernanceToken extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  CLOCK_MODE: TypedContractMethod<[], [string], "view">;
+
+  DOMAIN_SEPARATOR: TypedContractMethod<[], [string], "view">;
+
   FOUNDER_ALLOCATION_PERCENTAGE: TypedContractMethod<[], [bigint], "view">;
 
   TOTAL_SUPPLY: TypedContractMethod<[], [bigint], "view">;
@@ -279,7 +431,48 @@ export interface GovernanceToken extends BaseContract {
 
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
+  checkpoints: TypedContractMethod<
+    [account: AddressLike, pos: BigNumberish],
+    [Checkpoints.Checkpoint208StructOutput],
+    "view"
+  >;
+
+  clock: TypedContractMethod<[], [bigint], "view">;
+
   decimals: TypedContractMethod<[], [bigint], "view">;
+
+  delegate: TypedContractMethod<[delegatee: AddressLike], [void], "nonpayable">;
+
+  delegateBySig: TypedContractMethod<
+    [
+      delegatee: AddressLike,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  delegates: TypedContractMethod<[account: AddressLike], [string], "view">;
+
+  eip712Domain: TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
 
   founderAddress: TypedContractMethod<[], [string], "view">;
 
@@ -287,11 +480,39 @@ export interface GovernanceToken extends BaseContract {
 
   getFounderBalance: TypedContractMethod<[], [bigint], "view">;
 
+  getPastTotalSupply: TypedContractMethod<
+    [timepoint: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  getPastVotes: TypedContractMethod<
+    [account: AddressLike, timepoint: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  getVotes: TypedContractMethod<[account: AddressLike], [bigint], "view">;
+
   name: TypedContractMethod<[], [string], "view">;
 
-  owner: TypedContractMethod<[], [string], "view">;
+  nonces: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  numCheckpoints: TypedContractMethod<[account: AddressLike], [bigint], "view">;
+
+  permit: TypedContractMethod<
+    [
+      owner: AddressLike,
+      spender: AddressLike,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
 
   symbol: TypedContractMethod<[], [string], "view">;
 
@@ -309,16 +530,16 @@ export interface GovernanceToken extends BaseContract {
     "nonpayable"
   >;
 
-  transferOwnership: TypedContractMethod<
-    [newOwner: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "CLOCK_MODE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "DOMAIN_SEPARATOR"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "FOUNDER_ALLOCATION_PERCENTAGE"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -343,8 +564,55 @@ export interface GovernanceToken extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
+    nameOrSignature: "checkpoints"
+  ): TypedContractMethod<
+    [account: AddressLike, pos: BigNumberish],
+    [Checkpoints.Checkpoint208StructOutput],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "clock"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "decimals"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "delegate"
+  ): TypedContractMethod<[delegatee: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "delegateBySig"
+  ): TypedContractMethod<
+    [
+      delegatee: AddressLike,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "delegates"
+  ): TypedContractMethod<[account: AddressLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "eip712Domain"
+  ): TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "founderAddress"
   ): TypedContractMethod<[], [string], "view">;
@@ -355,14 +623,42 @@ export interface GovernanceToken extends BaseContract {
     nameOrSignature: "getFounderBalance"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "getPastTotalSupply"
+  ): TypedContractMethod<[timepoint: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getPastVotes"
+  ): TypedContractMethod<
+    [account: AddressLike, timepoint: BigNumberish],
+    [bigint],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getVotes"
+  ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
+  getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "owner"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "nonces"
+  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+    nameOrSignature: "numCheckpoints"
+  ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "permit"
+  ): TypedContractMethod<
+    [
+      owner: AddressLike,
+      spender: AddressLike,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "symbol"
   ): TypedContractMethod<[], [string], "view">;
@@ -383,9 +679,6 @@ export interface GovernanceToken extends BaseContract {
     [boolean],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "transferOwnership"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
   getEvent(
     key: "Approval"
@@ -395,18 +688,32 @@ export interface GovernanceToken extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
+    key: "DelegateChanged"
+  ): TypedContractEvent<
+    DelegateChangedEvent.InputTuple,
+    DelegateChangedEvent.OutputTuple,
+    DelegateChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "DelegateVotesChanged"
+  ): TypedContractEvent<
+    DelegateVotesChangedEvent.InputTuple,
+    DelegateVotesChangedEvent.OutputTuple,
+    DelegateVotesChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "EIP712DomainChanged"
+  ): TypedContractEvent<
+    EIP712DomainChangedEvent.InputTuple,
+    EIP712DomainChangedEvent.OutputTuple,
+    EIP712DomainChangedEvent.OutputObject
+  >;
+  getEvent(
     key: "FounderAllocationSet"
   ): TypedContractEvent<
     FounderAllocationSetEvent.InputTuple,
     FounderAllocationSetEvent.OutputTuple,
     FounderAllocationSetEvent.OutputObject
-  >;
-  getEvent(
-    key: "OwnershipTransferred"
-  ): TypedContractEvent<
-    OwnershipTransferredEvent.InputTuple,
-    OwnershipTransferredEvent.OutputTuple,
-    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "Transfer"
@@ -428,6 +735,39 @@ export interface GovernanceToken extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
+    "DelegateChanged(address,address,address)": TypedContractEvent<
+      DelegateChangedEvent.InputTuple,
+      DelegateChangedEvent.OutputTuple,
+      DelegateChangedEvent.OutputObject
+    >;
+    DelegateChanged: TypedContractEvent<
+      DelegateChangedEvent.InputTuple,
+      DelegateChangedEvent.OutputTuple,
+      DelegateChangedEvent.OutputObject
+    >;
+
+    "DelegateVotesChanged(address,uint256,uint256)": TypedContractEvent<
+      DelegateVotesChangedEvent.InputTuple,
+      DelegateVotesChangedEvent.OutputTuple,
+      DelegateVotesChangedEvent.OutputObject
+    >;
+    DelegateVotesChanged: TypedContractEvent<
+      DelegateVotesChangedEvent.InputTuple,
+      DelegateVotesChangedEvent.OutputTuple,
+      DelegateVotesChangedEvent.OutputObject
+    >;
+
+    "EIP712DomainChanged()": TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
+    >;
+    EIP712DomainChanged: TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
+    >;
+
     "FounderAllocationSet(address,uint256)": TypedContractEvent<
       FounderAllocationSetEvent.InputTuple,
       FounderAllocationSetEvent.OutputTuple,
@@ -437,17 +777,6 @@ export interface GovernanceToken extends BaseContract {
       FounderAllocationSetEvent.InputTuple,
       FounderAllocationSetEvent.OutputTuple,
       FounderAllocationSetEvent.OutputObject
-    >;
-
-    "OwnershipTransferred(address,address)": TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
-    >;
-    OwnershipTransferred: TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

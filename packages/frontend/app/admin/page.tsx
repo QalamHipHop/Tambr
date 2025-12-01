@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
+import AdminDashboard from './Dashboard';
 
 export default function AdminPage() {
   const { address, isConnected } = useAccount();
@@ -69,9 +70,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div className="min-h-screen bg-gray-900 text-white py-12 px-4" dir="rtl">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold text-white mb-8 text-right">داشبورد مدیریت</h1>
 
         {/* Tabs */}
         <div className="flex gap-4 mb-8">
@@ -83,7 +84,7 @@ export default function AdminPage() {
                 : 'bg-white text-gray-800 hover:bg-gray-100'
             }`}
           >
-            Overview
+            نمای کلی
           </button>
           <button
             onClick={() => setActiveTab('settings')}
@@ -93,7 +94,7 @@ export default function AdminPage() {
                 : 'bg-white text-gray-800 hover:bg-gray-100'
             }`}
           >
-            Settings
+            تنظیمات
           </button>
           <button
             onClick={() => setActiveTab('treasury')}
@@ -103,53 +104,22 @@ export default function AdminPage() {
                 : 'bg-white text-gray-800 hover:bg-gray-100'
             }`}
           >
-            Treasury
+            خزانه‌داری
           </button>
         </div>
 
         {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">System Overview</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-indigo-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Supply</h3>
-                <p className="text-3xl font-bold text-indigo-600">1,000,000 IRR</p>
-              </div>
-              
-              <div className="bg-green-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Reserve Balance</h3>
-                <p className="text-3xl font-bold text-green-600">500,000 IRR</p>
-              </div>
-              
-              <div className="bg-blue-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Founder Fee Rate</h3>
-                <p className="text-3xl font-bold text-blue-600">5%</p>
-              </div>
-              
-              <div className="bg-purple-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Active Users</h3>
-                <p className="text-3xl font-bold text-purple-600">1,234</p>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Connected Account</h3>
-              <p className="text-sm text-gray-600 break-all">{address}</p>
-            </div>
-          </div>
-        )}
+        {activeTab === 'overview' && <AdminDashboard />}
 
         {/* Settings Tab */}
         {activeTab === 'settings' && (
           <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Settings</h2>
+            <h2 className="text-2xl font-bold text-white mb-6 text-right">تنظیمات</h2>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Founder Fee Rate (%)
+                <label className="block text-sm font-medium text-gray-300 mb-2 text-right">
+                  نرخ کارمزد بنیان‌گذار (٪)
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -165,13 +135,13 @@ export default function AdminPage() {
                     disabled={loading || !founderFeeRate}
                     className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-bold rounded-lg transition"
                   >
-                    Update
+                    به‌روزرسانی
                   </button>
                 </div>
               </div>
 
               {message && (
-                <div className={`p-4 rounded-lg ${message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                <div className={`p-4 rounded-lg text-right ${message.includes('Error') ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`}>
                   {message}
                 </div>
               )}
@@ -182,12 +152,12 @@ export default function AdminPage() {
         {/* Treasury Tab */}
         {activeTab === 'treasury' && (
           <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Treasury Management</h2>
+            <h2 className="text-2xl font-bold text-white mb-6 text-right">مدیریت خزانه‌داری</h2>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Treasury Address
+                <label className="block text-sm font-medium text-gray-300 mb-2 text-right">
+                  آدرس خزانه‌داری (Multi-sig)
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -203,19 +173,19 @@ export default function AdminPage() {
                     disabled={loading || !treasuryAddress}
                     className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-bold rounded-lg transition"
                   >
-                    Update
+                    به‌روزرسانی
                   </button>
                 </div>
               </div>
 
-              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                <p className="text-sm text-yellow-800">
-                  <strong>Note:</strong> Changing the treasury address requires multi-sig approval.
+              <div className="bg-yellow-900 p-4 rounded-lg border border-yellow-700 text-right">
+                <p className="text-sm text-yellow-300">
+                  <strong>توجه:</strong> تغییر آدرس خزانه‌داری نیاز به تأیید چند امضایی (Multi-sig) دارد.
                 </p>
               </div>
 
               {message && (
-                <div className={`p-4 rounded-lg ${message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                <div className={`p-4 rounded-lg text-right ${message.includes('Error') ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`}>
                   {message}
                 </div>
               )}

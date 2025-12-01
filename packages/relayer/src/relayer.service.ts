@@ -32,8 +32,8 @@ export class RelayerService {
 
   constructor() {
     this.CHAIN_ID = parseInt(process.env.CHAIN_ID || '31337'); // Hardhat default
-    this.RELAYER_ADDRESS = process.env.RELAYER_ADDRESS || '0x...'; // Replace with actual relayer address
-    this.VERIFYING_CONTRACT = process.env.VERIFYING_CONTRACT || '0x...'; // Replace with actual verifying contract address
+    this.RELAYER_ADDRESS = process.env.RELAYER_ADDRESS || '0x...'; // Relayer address is derived from private key
+    this.VERIFYING_CONTRACT = process.env.VERIFYING_CONTRACT || '0x...'; // Address of the deployed TambrForwarder contract
 
     const privateKey = process.env.RELAYER_PRIVATE_KEY;
     const rpcUrl = process.env.RPC_URL;
@@ -75,9 +75,15 @@ export class RelayerService {
     // 2. Verify the signature (off-chain check for security)
     // In a full implementation, you would use the verifying contract's `verify` function
     // to check if the signature is valid for the request.
-    // For this mock, we'll assume the signature is valid if it's not empty.
-    if (!signature) {
-        throw new Error('Signature is required.');
+    // 2. Off-chain verification (optional but recommended to save gas on invalid signatures)
+    const forwarderVerifyAbi = [
+        "function verify(tuple(address from, address to, uint256 value, uint256 gas, uint256 nonce, bytes data) req, bytes signature) view returns (bool)"
+    ];
+    const forwarderVerify = new ethers.Contract(this.VERIFYING_CONTRACT, forwarderVerifyAbi, this.provider);
+
+    const isValid = await forwarderVerify.verify(request, signature);
+    if (!isValid) {
+        throw new Error('EIP-712 signature verification failed.');
     }
 
     this.logger.log(`Relaying transaction from ${request.from} to ${request.to}`);
@@ -86,7 +92,8 @@ export class RelayerService {
     // The transaction will call the `execute` function on the verifying contract (Forwarder)
     // which will then execute the actual call (request.data) on behalf of the user (request.from).
     const forwarderAbi = [
-        "function execute(tuple(address from, address to, uint256 value, uint256 gas, uint256 nonce, bytes data) req, bytes signature) returns (bool, bytes)"
+        "function execute(tuple(address from, address to, uint256 value, uint256 gas, uint256 nonce, bytes data) req, bytes signature) returns (bool, bytes)",
+        "function verify(tuple(address from, address to, uint256 value, uint256 gas, uint256 nonce, bytes data) req, bytes signature) view returns (bool)"
     ];
     const forwarder = new ethers.Contract(this.VERIFYING_CONTRACT, forwarderAbi, this.wallet);
 

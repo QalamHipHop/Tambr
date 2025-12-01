@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import a suitable Farsi/RTL font, e.g., Vazirmatn from Google Fonts */
+/* For a real project, this should be self-hosted or properly imported */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
+
 html {
   scroll-behavior: smooth;
 }
@@ -9,6 +13,8 @@ html {
 body {
   background-color: #0f172a;
   color: #e2e8f0;
+  /* Apply Farsi font to the body */
+  font-family: 'Vazirmatn', sans-serif;
 }
 
 a {

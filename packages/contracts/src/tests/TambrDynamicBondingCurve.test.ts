@@ -82,7 +82,7 @@ describe("TambrDynamicBondingCurve", function () {
     it("Should not allow non-owner to set treasury", async function () {
       await expect(
         dbc.connect(addr1).setTreasury(addr1.address)
-      ).to.be.revertedWith("Ownable");
+      ).to.be.revertedWithCustomError(dbc, "OwnableUnauthorizedAccount");
     });
 
     it("Should not allow setting zero address as treasury", async function () {
@@ -102,7 +102,7 @@ describe("TambrDynamicBondingCurve", function () {
     it("Should not allow non-owner to set founder fee rate", async function () {
       await expect(
         dbc.connect(addr1).setFounderFeeRate(1000)
-      ).to.be.revertedWith("Ownable");
+      ).to.be.revertedWithCustomError(dbc, "OwnableUnauthorizedAccount");
     });
 
     it("Should not allow setting fee rate >= 100%", async function () {

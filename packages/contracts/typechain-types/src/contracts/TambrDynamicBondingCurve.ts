@@ -32,6 +32,8 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
       | "calculateSellReturn"
       | "founderFeeRate"
       | "owner"
+      | "pause"
+      | "paused"
       | "renounceOwnership"
       | "reserveBalance"
       | "sell"
@@ -40,6 +42,7 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
       | "stablecoin"
       | "transferOwnership"
       | "treasury"
+      | "unpause"
   ): FunctionFragment;
 
   getEvent(
@@ -47,8 +50,10 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
       | "Buy"
       | "FounderFeeRateUpdated"
       | "OwnershipTransferred"
+      | "Paused"
       | "Sell"
       | "TreasuryUpdated"
+      | "Unpaused"
   ): EventFragment;
 
   encodeFunctionData(
@@ -72,6 +77,8 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -101,6 +108,7 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "FEE_DENOMINATOR",
@@ -120,6 +128,8 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -143,6 +153,7 @@ export interface TambrDynamicBondingCurveInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 }
 
 export namespace BuyEvent {
@@ -195,6 +206,18 @@ export namespace OwnershipTransferredEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace PausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace SellEvent {
   export type InputTuple = [
     seller: AddressLike,
@@ -225,6 +248,18 @@ export namespace TreasuryUpdatedEvent {
   export type OutputTuple = [newTreasury: string];
   export interface OutputObject {
     newTreasury: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UnpausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -299,6 +334,10 @@ export interface TambrDynamicBondingCurve extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
+  paused: TypedContractMethod<[], [boolean], "view">;
+
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   reserveBalance: TypedContractMethod<[], [bigint], "view">;
@@ -330,6 +369,8 @@ export interface TambrDynamicBondingCurve extends BaseContract {
   >;
 
   treasury: TypedContractMethod<[], [string], "view">;
+
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -366,6 +407,12 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "paused"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
@@ -393,6 +440,9 @@ export interface TambrDynamicBondingCurve extends BaseContract {
   getFunction(
     nameOrSignature: "treasury"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
 
   getEvent(
     key: "Buy"
@@ -416,6 +466,13 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
+    key: "Paused"
+  ): TypedContractEvent<
+    PausedEvent.InputTuple,
+    PausedEvent.OutputTuple,
+    PausedEvent.OutputObject
+  >;
+  getEvent(
     key: "Sell"
   ): TypedContractEvent<
     SellEvent.InputTuple,
@@ -428,6 +485,13 @@ export interface TambrDynamicBondingCurve extends BaseContract {
     TreasuryUpdatedEvent.InputTuple,
     TreasuryUpdatedEvent.OutputTuple,
     TreasuryUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Unpaused"
+  ): TypedContractEvent<
+    UnpausedEvent.InputTuple,
+    UnpausedEvent.OutputTuple,
+    UnpausedEvent.OutputObject
   >;
 
   filters: {
@@ -464,6 +528,17 @@ export interface TambrDynamicBondingCurve extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
+    "Paused(address)": TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+    Paused: TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+
     "Sell(address,uint256,uint256,uint256)": TypedContractEvent<
       SellEvent.InputTuple,
       SellEvent.OutputTuple,
@@ -484,6 +559,17 @@ export interface TambrDynamicBondingCurve extends BaseContract {
       TreasuryUpdatedEvent.InputTuple,
       TreasuryUpdatedEvent.OutputTuple,
       TreasuryUpdatedEvent.OutputObject
+    >;
+
+    "Unpaused(address)": TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
+    >;
+    Unpaused: TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
     >;
   };
 }

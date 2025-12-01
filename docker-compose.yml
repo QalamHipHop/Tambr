@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # --- Application Services ---
   frontend:
     build:
       context: .
@@ -15,6 +16,7 @@ services:
       - relayer
     networks:
       - tambr-network
+    restart: always
 
   relayer:
     build:
@@ -30,6 +32,56 @@ services:
       - VERIFYING_CONTRACT=${VERIFYING_CONTRACT}
     networks:
       - tambr-network
+    restart: always
+
+  # --- Infrastructure Services ---
+  hardhat:
+    image: node:20-alpine
+    command: sh -c "pnpm --filter @tambr/contracts install && pnpm --filter @tambr/contracts node"
+    working_dir: /app
+    ports:
+      - "8545:8545"
+    volumes:
+      - .:/app
+    networks:
+      - tambr-network
+    restart: always
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - tambr-network
+    restart: always
+
+  promtail:
+    image: grafana/promtail:latest
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+      - /var/log:/var/log # Mount host logs (example)
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro # Mount docker logs
+    depends_on:
+      - loki
+    networks:
+      - tambr-network
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:
+      - loki
+    networks:
+      - tambr-network
+    restart: always
 
   # Optional: Database service (if needed)
   # postgres:
@@ -47,5 +99,5 @@ networks:
   tambr-network:
     driver: bridge
 
-# volumes:
-#   postgres_data:
+volumes:
+  postgres_data:

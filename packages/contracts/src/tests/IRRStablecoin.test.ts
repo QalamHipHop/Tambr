@@ -55,7 +55,7 @@ describe("IRRStablecoin", function () {
       // Try to mint without minter role
       await expect(
         irrStablecoin.connect(addr1).mint(addr2.address, amount)
-      ).to.be.revertedWith("AccessControl");
+      ).to.be.revertedWithCustomError(irrStablecoin, "AccessControlUnauthorizedAccount");
     });
   });
 
@@ -85,7 +85,7 @@ describe("IRRStablecoin", function () {
       // Try to burn without burner role
       await expect(
         irrStablecoin.connect(addr1).burn(owner.address, amount)
-      ).to.be.revertedWith("AccessControl");
+      ).to.be.revertedWithCustomError(irrStablecoin, "AccessControlUnauthorizedAccount");
     });
   });
 
@@ -102,7 +102,7 @@ describe("IRRStablecoin", function () {
       // Try to transfer
       await expect(
         irrStablecoin.transfer(addr1.address, amount)
-      ).to.be.revertedWith("ERC20Pausable");
+      ).to.be.revertedWithCustomError(irrStablecoin, "EnforcedPause");
     });
 
     it("Should allow pauser to unpause transfers", async function () {

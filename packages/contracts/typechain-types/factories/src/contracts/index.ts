@@ -2,10 +2,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as forwarderSol from "./Forwarder.sol";
+export * as irrStablecoinSol from "./IRRStablecoin.sol";
 export { GovernanceToken__factory } from "./GovernanceToken__factory";
-export { IRRStablecoin__factory } from "./IRRStablecoin__factory";
+export { MockKYC__factory } from "./MockKYC__factory";
+export { MockPriceOracle__factory } from "./MockPriceOracle__factory";
 export { MultiSigWallet__factory } from "./MultiSigWallet__factory";
 export { SmartTicket__factory } from "./SmartTicket__factory";
+export { SocialRecoveryWallet__factory } from "./SocialRecoveryWallet__factory";
 export { SoulboundToken__factory } from "./SoulboundToken__factory";
 export { TambrDynamicBondingCurve__factory } from "./TambrDynamicBondingCurve__factory";
 export { TicketMarketplace__factory } from "./TicketMarketplace__factory";

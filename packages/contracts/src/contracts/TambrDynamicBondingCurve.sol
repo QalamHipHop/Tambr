@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 
 /**
@@ -11,7 +12,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * The curve is based on a simple linear model for demonstration, with a founder fee mechanism.
  * The actual complex mathematical logic for the DBC needs to be fully implemented.
  */
-contract TambrDynamicBondingCurve is Ownable {
+contract TambrDynamicBondingCurve is Ownable, Pausable {
     IERC20 public immutable stablecoin;
     address public treasury;
     uint256 public founderFeeRate; // e.g., 500 for 5% (500 / 10000)
@@ -53,6 +54,16 @@ contract TambrDynamicBondingCurve is Ownable {
         emit FounderFeeRateUpdated(_newRate);
     }
 
+    /// @dev Emergency pause function. Only callable by the owner.
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    /// @dev Emergency unpause function. Only callable by the owner.
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+
     /**
      * @dev Calculates the amount of stablecoin tokens received for a given amount of collateral (e.g., ETH/WETH).
      * @param _amountIn The amount of collateral being sent.
@@ -60,14 +71,14 @@ contract TambrDynamicBondingCurve is Ownable {
      * @return feeAmount The founder fee amount.
      */
     function calculateBuyReturn(uint256 _amountIn) public view returns (uint256 tokensOut, uint256 feeAmount) {
-        // TODO: Implement the full complex mathematical logic for the DBC (logarithmic/polynomial)
-        // For now, we use a simple 1:1 ratio for demonstration.
+        // Simple linear curve: price increases with supply
+        // Price = (reserveBalance / 1e18) * slope + initialPrice
+        // This is a simplified example. A real implementation would be more complex.
+        uint256 price = (reserveBalance / 1e18) * 100 + 1e18; // price starts at 1 and increases
+        tokensOut = (_amountIn * 1e18) / price;
         
-        uint256 totalFee = (_amountIn * founderFeeRate) / FEE_DENOMINATOR;
-        uint256 netAmount = _amountIn - totalFee;
-        
-        // Assuming 1:1 for simplicity
-        tokensOut = netAmount; 
+        uint256 totalFee = (tokensOut * founderFeeRate) / FEE_DENOMINATOR;
+        tokensOut = tokensOut - totalFee;
         feeAmount = totalFee;
     }
 
@@ -79,7 +90,7 @@ contract TambrDynamicBondingCurve is Ownable {
      * @param _amountIn The amount of collateral (e.g., WETH) to spend.
      * @param _minTokensOut The minimum amount of stablecoin tokens the buyer is willing to receive.
      */
-    function buy(uint256 _amountIn, uint256 _minTokensOut) public {
+    function buy(uint256 _amountIn, uint256 _minTokensOut) public whenNotPaused {
         (uint256 tokensOut, uint256 feeAmount) = calculateBuyReturn(_amountIn);
         require(tokensOut >= _minTokensOut, "Slippage too high");
 
@@ -108,13 +119,12 @@ contract TambrDynamicBondingCurve is Ownable {
      * @return feeAmount The founder fee amount.
      */
     function calculateSellReturn(uint256 _tokensIn) public view returns (uint256 amountOut, uint256 feeAmount) {
-        // TODO: Implement the full complex mathematical logic for the DBC (logarithmic/polynomial)
-        // For now, we use a simple 1:1 ratio for demonstration.
-        
-        uint256 totalReturn = _tokensIn; // Assuming 1:1 for simplicity
-        uint256 totalFee = (totalReturn * founderFeeRate) / FEE_DENOMINATOR;
-        
-        amountOut = totalReturn - totalFee;
+        // Simple linear curve: price decreases with supply
+        uint256 price = (reserveBalance / 1e18) * 100 + 1e18;
+        amountOut = (_tokensIn * price) / 1e18;
+
+        uint256 totalFee = (amountOut * founderFeeRate) / FEE_DENOMINATOR;
+        amountOut = amountOut - totalFee;
         feeAmount = totalFee;
     }
 
@@ -123,7 +133,7 @@ contract TambrDynamicBondingCurve is Ownable {
      * @param _tokensIn The amount of stablecoin tokens to sell.
      * @param _minAmountOut The minimum amount of collateral the seller is willing to receive.
      */
-    function sell(uint256 _tokensIn, uint256 _minAmountOut) public {
+    function sell(uint256 _tokensIn, uint256 _minAmountOut) public whenNotPaused {
         (uint256 amountOut, uint256 feeAmount) = calculateSellReturn(_tokensIn);
         require(amountOut >= _minAmountOut, "Slippage too high");
 
