@@ -3,6 +3,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { RelayerController } from './relayer.controller';
 import { RelayerService } from './relayer.service';
+import { RelayerMintService } from './relayer.mint.service';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RelayerService } from './relayer.service';
   controllers: [RelayerController],
   providers: [
     RelayerService,
+    RelayerMintService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

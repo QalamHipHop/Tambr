@@ -13,6 +13,7 @@ export default function CreateEventPage() {
     location: '',
     ticketPrice: '',
     totalTickets: '',
+    ticketType: 'General', // New field for ticket type
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -35,21 +36,48 @@ export default function CreateEventPage() {
 
     setIsSubmitting(true);
     try {
-      // TODO: Implement actual event creation logic with smart contract
-      console.log('Creating event:', formData);
-      setSuccessMessage('Event created successfully!');
-      setFormData({
-        eventName: '',
-        description: '',
-        eventDate: '',
-        location: '',
-        ticketPrice: '',
-        totalTickets: '',
+      // For a real application, you would get a unique eventId from a backend service.
+      // For now, we'll use a placeholder eventId.
+      const PLACEHOLDER_EVENT_ID = Math.floor(Math.random() * 1000000);
+
+      const mintData = {
+        to: address, // Mint to the connected user's address
+        quantity: parseInt(formData.totalTickets),
+        eventId: PLACEHOLDER_EVENT_ID,
+        ticketType: formData.ticketType,
+      };
+
+      // We need to proxy this request through our Next.js API route
+      const response = await fetch('/api/mint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mintData),
       });
-      setTimeout(() => setSuccessMessage(''), 3000);
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('Minting successful:', result.txHash);
+        setSuccessMessage(`Event created and ${formData.totalTickets} tickets minted! Tx: ${result.txHash}`);
+        setFormData({
+          eventName: '',
+          description: '',
+          eventDate: '',
+          location: '',
+          ticketPrice: '',
+          totalTickets: '',
+          ticketType: 'General',
+        });
+      } else {
+        throw new Error(result.error || 'Unknown error from relayer');
+      }
+
+      setTimeout(() => setSuccessMessage(''), 5000);
     } catch (error) {
-      console.error('Error creating event:', error);
-      alert('Failed to create event');
+      console.error('Error creating event/minting tickets:', error);
+      alert(`Failed to create event/mint tickets: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -187,6 +215,22 @@ export default function CreateEventPage() {
                 placeholder="100"
               />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="ticketType" className="block text-sm font-medium mb-2">
+              Ticket Type
+            </label>
+            <input
+              type="text"
+              id="ticketType"
+              name="ticketType"
+              value={formData.ticketType}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
+              placeholder="e.g., General, VIP, Backstage"
+            />
           </div>
 
           <button
